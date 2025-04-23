@@ -1,0 +1,26 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:gold_ball",
+			"materials": {
+				"default": "entity_add"
+			},
+			"textures": {
+				"default": "textures/entity/gold_ball"
+			},
+			"geometry": {
+				"default": "geometry.gold_ball"
+			},
+			"animations":{
+				"always":"animation.fireball.always"
+			},
+			"scripts":{
+				"animate":[
+					"always"
+				]
+			},
+			"render_controllers": ["controller.render.default"]
+		}
+	}
+}

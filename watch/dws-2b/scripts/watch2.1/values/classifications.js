@@ -1,0 +1,7 @@
+var gold = ["gold", "kavili", "Qbi"]
+var tree = ["tree", "semela", "molador"]
+var water = ["water", "gabina", "hynas"]
+var fire = ["fire", "reguman", "darigu"]
+var earth = ["earth", "giardo", "kabo"]
+var light = ["light", "sori", "mira"]
+export var DragonList = [gold, tree, water, fire, earth, light]

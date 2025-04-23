@@ -1,0 +1,88 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "dws:earth_emit",
+			"basic_render_parameters": {
+				"material": "particles_add",
+				"texture": "textures/particles/fire_ball"
+			}
+		},
+		"curves": {
+			"variable.test2": {
+				"type": "bezier_chain",
+				"input": "v.particle_age",
+				"nodes": {
+					"0.0": {
+						"value": 1,
+						"slope": -3.8
+					},
+					"0.36": {
+						"value": 1,
+						"slope": 4.15
+					}
+				}
+			},
+			"variable.test1": {
+				"type": "bezier_chain",
+				"input": "v.particle_age",
+				"nodes": {
+					"0.0": {
+						"value": 0,
+						"slope": 0
+					},
+					"0.35": {
+						"value": 1,
+						"slope": 0
+					},
+					"0.72": {
+						"value": 0,
+						"slope": 0
+					}
+				}
+			}
+		},
+		"components": {
+			"minecraft:emitter_initialization": {
+				"creation_expression": "variable.size = 0.3;variable.radius = 0.6;"
+			},
+			"minecraft:emitter_local_space": {
+				"position": true,
+				"rotation": true
+			},
+			"minecraft:emitter_rate_steady": {
+				"spawn_rate": 30,
+				"max_particles": 60
+			},
+			"minecraft:emitter_lifetime_looping": {
+				"active_time": 1.5
+			},
+			"minecraft:emitter_shape_point": {
+				"offset": ["variable.radius*-math.sin(v.emitter_age*360)*1.5", "variable.emitter_age*2", "variable.radius*math.cos(variable.emitter_age*360)*1.5"]
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": 1
+			},
+			"minecraft:particle_initial_speed": 0,
+			"minecraft:particle_motion_dynamic": {},
+			"minecraft:particle_appearance_billboard": {
+				"size": ["variable.size*(1-variable.particle_age)", "variable.size*(1-variable.particle_age)"],
+				"facing_camera_mode": "rotate_xyz",
+				"uv": {
+					"texture_width": 32,
+					"texture_height": 32,
+					"uv": [0, 0],
+					"uv_size": [32, 32]
+				}
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"4.0": "#38FF7F00"
+					}
+				}
+			}
+		}
+	}
+}

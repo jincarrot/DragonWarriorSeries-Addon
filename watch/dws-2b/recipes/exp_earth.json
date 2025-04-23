@@ -1,0 +1,26 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier":"dws:exp_earth"
+        },
+
+
+        "tags": ["crafting_table"],
+        "pattern": [
+            " # ",
+            "# #",
+            " # "
+    ],
+    "key": {
+      "#": {
+            "item": "dws:earth_energy"
+        }
+    },
+    "result": [
+        {
+        "item": "dws:exp"
+    }  
+   ]
+ }
+}

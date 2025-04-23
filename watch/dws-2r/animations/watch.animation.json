@@ -1,0 +1,33 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.watch.1st": {
+			"loop": true,
+			"bones": {
+				"bone": {
+					"rotation": [75.91664, 62.99783, -6.82877],
+					"position": [-6, 21, -3]
+				},
+				"root_item": {
+					"rotation": [124.26, 66.55, 57.05],
+					"position": [-5, 20, -2]
+				}
+			}
+		},
+		"animation.watch.3rd": {
+			"loop": true,
+			"bones": {
+				"bone": {
+					"rotation": [89.55933, -9.99038, -87.46148],
+					"position": [0, 24, -3],
+					"scale": [0.7, 1, 0.7]
+				},
+				"root_item": {
+					"rotation": [89.77881, 10.00943, 94.95682],
+					"position": [0, 22, -3.4],
+					"scale": 0.5
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"texture_data": {
+		"exp":{
+			"textures": ["textures/items/exp"]
+		},
+		"super_exp":{
+			"textures": ["textures/items/super_exp"]
+		},
+		"up": {
+			"textures": ["textures/items/up"]
+		},
+		"levelup":{
+			"textures": ["textures/items/levelup"]
+		},
+		"tp_card":{
+			"textures": ["textures/items/tp_card"]
+		},
+		"dragon_watch":{
+			"textures": ["textures/items/dragon_watch"]
+		},
+		"universe_stone":{
+			"textures": ["textures/items/universe_stone"]
+		},
+		"short_cut":{
+			"textures": ["textures/ui/share_microsoft"]
+		}
+	}
+}

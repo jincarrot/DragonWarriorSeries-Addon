@@ -1,0 +1,26 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:tp_light",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/tp_light"
+			},
+			"animations": {
+				"always": "animation.tp_light.always"
+			},
+			"scripts": {
+				"animate":[
+					"always"
+				]
+			},
+			"geometry": {
+				"default": "geometry.tp_light"
+			},
+			"render_controllers": ["controller.render.default"]
+		}
+	}
+}
