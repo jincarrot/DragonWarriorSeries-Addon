@@ -1,0 +1,24 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "§6§l斗龙进化§r v0.1.0",
+		"description": "§6§l斗龙战士§r§e第四部分(v0.1.0)，§b斗龙进化的测试包!§b输入/function ver 获取测试包信息！",
+		"uuid": "322ccb63-4dee-ebb4-fb03-2cf44081c4bd",
+		"version": [0, 1, 0],
+		"min_engine_version": [1, 19, 50]
+	},
+	"metadata": {
+		"authors": ["jincarrot"],
+		"generated_with": {
+			"blockbench_entity_wizard": ["1.1.1"]
+		}
+	},
+	"modules": [
+		{
+			"description": "dragon",
+			"type": "resources",
+			"uuid": "97d9825c-23ca-ab6d-bd2d-b55b21dbb57c",
+			"version": [0, 1, 0]
+		}
+	]
+}

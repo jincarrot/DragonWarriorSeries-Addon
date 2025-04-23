@@ -1,0 +1,42 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "§6§l斗龙手刀§r v0.0.8",
+		"description": "§6§l斗龙战士§r§e第五部分，§b斗龙手刀的预发布正式包!§b",
+		"uuid": "d9046994-d128-1ef2-d32c-1b2ce52ec2fc",
+		"version": [0, 0, 8],
+		"min_engine_version": [1, 20, 0]
+	},
+	"metadata": {
+		"authors": ["jincarrot"],
+		"generated_with": {
+			"blockbench_item_wizard": ["1.0.2"]
+		}
+	},
+	"modules": [
+		{
+            "description": "knive",
+            "type": "script",
+            "language": "javascript",
+            "uuid": "5a1b53fc-5743-2a76-91b7-9cdF127634ae",
+            "version": [0 , 0, 8],
+            "entry": "scripts/main.js"
+        },
+		{
+			"description": "Behavior",
+			"version": [0, 0, 8],
+			"uuid": "ad1646b3-a902-e1ab-53d0-539cc04e3370",
+			"type": "data"
+		}
+	],
+	"dependencies": [
+		{
+			"module_name": "@minecraft/server",
+			"version": "1.9.0"
+		  },	
+		{
+			"uuid": "caf8451f-2ba1-332a-4f50-b4dc29857f48",
+			"version": [0, 0, 8]
+		}
+	]
+}

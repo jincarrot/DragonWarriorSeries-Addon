@@ -1,0 +1,7 @@
+{
+	"texture_data": {
+		"energy_cluster": {
+			"textures": ["textures/items/energy_cluster"]
+		}
+	}
+}

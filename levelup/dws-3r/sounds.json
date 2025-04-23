@@ -1,0 +1,38 @@
+{
+	"entity_sounds": {
+		"entities": {
+			"dws:reguman_v2": {
+				"events": {
+					"step": {
+						"pitch": [
+							0.8,
+							1.2
+						],
+						"sound": "levelup.walk"
+					}
+				},
+				"pitch": [
+					0.8,
+					1.2
+				],
+				"volume": 1
+			},
+			"dws:kavili_v2": {
+				"events": {
+					"step": {
+						"pitch": [
+							0.8,
+							1.2
+						],
+						"sound": "levelup.walk"
+					}
+				},
+				"pitch": [
+					0.8,
+					1.2
+				],
+				"volume": 1
+			}	
+		}
+	}
+}

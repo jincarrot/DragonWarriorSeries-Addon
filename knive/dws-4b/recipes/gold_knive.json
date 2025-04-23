@@ -1,0 +1,32 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier":"dws:gold_knive"
+        },
+
+
+        "tags": ["crafting_table"],
+        "pattern": [
+            " # ",
+            " P ",
+            " S "
+    ],
+    "key": {
+      "#": {
+            "item": "dws:gold_core"
+        },
+      "P": {
+            "item": "dws:universe_stone"
+        },
+        "S": {
+            "item": "minecraft:netherite_sword"
+        }
+    },
+    "result": [
+        {
+        "item": "dws:gold_knive"
+    }  
+   ]
+ }
+}

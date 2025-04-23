@@ -1,0 +1,1 @@
+execute as @e[type=dws:reguman_v2] at @s run particle dws:firef ~~~

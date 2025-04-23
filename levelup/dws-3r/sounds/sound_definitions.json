@@ -1,0 +1,12 @@
+{
+    "levelup.walk": {
+        "category": "neutral",
+		"sounds": [
+			{
+				"name": "sounds/walk",
+				"volume": 1,
+				"load_on_low_memory": true
+			}
+		]
+    }
+}

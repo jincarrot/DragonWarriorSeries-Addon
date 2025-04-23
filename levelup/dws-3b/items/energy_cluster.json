@@ -1,0 +1,17 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "dws:energy_cluster",
+      "category": "items"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "energy_cluster"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.items"
+      }  
+    }
+  }
+}

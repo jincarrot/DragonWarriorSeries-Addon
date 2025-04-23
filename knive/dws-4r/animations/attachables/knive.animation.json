@@ -1,0 +1,82 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.knive.3rd": {
+			"loop": true,
+			"bones": {
+				"root_item": {
+					"rotation": [77.5, 0, 0],
+					"position": [0, 21, -1]
+				}
+			}
+		},
+		"animation.knive.1st": {
+			"loop": true,
+			"bones": {
+				"root_item": {
+					"rotation": [135, 77.5, -12.5],
+					"position": [-4, 27, -1]
+				}
+			}
+		},
+		"animation.player.first_person.breathing_bob": {
+			"loop": true,
+			"bones": {
+				"rightitem": {
+					"rotation": [0, 0, "0.5-math.sin(q.life_time *110) * 0.2"],
+					"position": [0, "variable.bob_animation * 0.35 -math.sin(q.life_time *110) * 0.05", 0],
+					"scale": [0.9725, 0.9725, 0.9725]
+				}
+			}
+		},
+		"animation.player.first_person.walk": {
+			"loop": true,
+			"bones": {
+				"leftarm": {
+					"position": [
+						"variable.is_holding_left ? math.sin(-query.walk_distance * 180.0) * variable.hand_bob * 0.75 : math.sin(-query.walk_distance * 180.0) * variable.hand_bob * 9.75",
+						"variable.is_holding_left ? -math.abs(math.cos(-query.walk_distance * 180.0)) * variable.hand_bob * 0.11 + variable.short_arm_offset_left : -math.abs(math.cos(-query.walk_distance * 180.0)) * variable.hand_bob * 15.0 + variable.short_arm_offset_left",
+						0
+					]
+				},
+				"rightarm": {
+					"position": [
+						"variable.is_holding_right ? math.sin(-query.walk_distance * 180.0) * variable.hand_bob * 0.75 : math.sin(-query.walk_distance * 180.0) * variable.hand_bob * 9.75",
+						"variable.is_holding_right ? -math.abs(math.cos(-query.walk_distance * 180.0)) * variable.hand_bob * 0.11 + variable.short_arm_offset_right : -math.abs(math.cos(-query.walk_distance * 180.0)) * variable.hand_bob * 15.0 + variable.short_arm_offset_right",
+						0
+					]
+				}
+			}
+		},
+		"animation.player.first_person.attack_rotation": {
+			"loop": true,
+			"bones": {
+				"rightitem": {
+					"rotation": [
+						"math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 200.0) * 20.0",
+						"math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 200.0) * -42",
+						"math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 200.0) * -78"
+					],
+					"position": [
+						"math.clamp(-15.5 * math.sin(variable.first_person_rotation_factor * variable.attack_time * 112.0), 12, 999.0) * math.sin(variable.first_person_rotation_factor * variable.attack_time * 112.0)",
+						"math.clamp(2 * math.sin(variable.first_person_rotation_factor * variable.attack_time * 112.0), 3, 999.0) * math.sin(variable.first_person_rotation_factor * variable.attack_time * 112.0)",
+						"math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 28.0) * -11"
+					],
+					"scale": [1.1, 1.8, 1.1]
+				},
+				"rightarm": {
+					"position": [
+						"variable.is_holding_right ? 0.0 : math.clamp(-15.5 * math.sin(variable.first_person_rotation_factor * variable.attack_time * 112.0), -7.0, 999.0) * math.sin(variable.first_person_rotation_factor * variable.attack_time * 112.0)",
+						"variable.is_holding_right ? 0.0 : math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 200.0) * 7.5 - variable.first_person_rotation_factor * variable.attack_time * 15.0 + variable.short_arm_offset_right",
+						"variable.is_holding_right ? 0.0 : math.sin(variable.first_person_rotation_factor * variable.attack_time * 120.0) * 1.75"
+					],
+					"rotation": [
+						"variable.is_holding_right ? 0.0 : math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 280.0) * -60.0",
+						"variable.is_holding_right ? 0.0 : math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 280.0) * 40.0",
+						"variable.is_holding_right ? 0.0 : math.sin(variable.first_person_rotation_factor * (1.0 - variable.attack_time) * (1.0 - variable.attack_time) * 280.0) * 20.0"
+					]
+				}
+			}
+		}
+	}
+}

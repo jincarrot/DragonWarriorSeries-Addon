@@ -1,0 +1,22 @@
+{
+	"texture_data": {
+		"fire_knive": {
+			"textures": "textures/items/fire_knive.png"
+		},
+		"gold_knive": {
+			"textures": "textures/items/gold_knive.png"
+		},
+		"tree_knive": {
+			"textures": "textures/items/tree_knive.png"
+		},
+		"water_knive": {
+			"textures": "textures/items/water_knive.png"
+		},
+		"earth_knive": {
+			"textures": "textures/items/earth_knive.png"
+		},
+		"light_knive": {
+			"textures": "textures/items/light_knive.png"
+		}
+	}
+}
