@@ -1,0 +1,62 @@
+{
+	"texture_data": {
+		"reguman_spawn_egg": {
+			"textures": ["textures/items/reguman_spawn_egg"]
+		},
+		"kavili_spawn_egg": {
+			"textures": ["textures/items/kavili_spawn_egg"]
+		},
+		"fire_energy": {
+			"textures": ["textures/items/fire_energy"]
+		},
+		"fire_core": {
+			"textures": ["textures/items/fire_core"]
+		},
+		"semela_spawn_egg": {
+			"textures": ["textures/items/semela_spawn_egg"]
+		},
+		"gabina_spawn_egg": {
+			"textures": ["textures/items/gabina_spawn_egg"]
+		},
+		"sori_spawn_egg": {
+			"textures": ["textures/items/sori_spawn_egg"]
+		},
+		"fire_watch": {
+			"textures": ["textures/items/fire_watch"]
+		},
+		"light_energy": {
+			"textures": ["textures/items/light_energy"]
+		},
+		"light_core": {
+			"textures": ["textures/items/light_core"]
+		},
+		"tree_energy": {
+			"textures": ["textures/items/tree_energy"]
+		},
+		"tree_core": {
+			"textures": ["textures/items/tree_core"]
+		},
+		"earth_energy": {
+			"textures": ["textures/items/earth_energy"]
+		},
+		"earth_core": {
+			"textures": ["textures/items/earth_core"]
+		},
+		"water_energy": {
+			"textures": ["textures/items/water_energy"]
+		},
+		"water_core": {
+			"textures": ["textures/items/water_core"]
+		},
+		"gold_energy": {
+			"textures": ["textures/items/gold_energy"]
+		},
+		"gold_core": {
+			"textures": ["textures/items/gold_core"]
+		},
+		"giardo_spawn_egg": {
+			"textures": ["textures/items/giardo_spawn_egg"]
+		}
+
+	}
+}

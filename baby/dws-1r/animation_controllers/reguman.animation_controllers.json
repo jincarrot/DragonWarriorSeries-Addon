@@ -1,0 +1,17 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.reguman.move": {
+            "states": {
+				"move": {
+					"animations":[
+						"walk"
+					],
+					"particle_effects":[
+						{"effect":"firef"}
+					]
+				}
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier":"dws:reguman_spawn_egg"
+        },
+
+
+        "tags": ["crafting_table"],
+        "pattern": [
+            "###",
+            "#P#",
+            "###"
+    ],
+    "key": {
+      "#": {
+            "item": "dws:fire_energy"
+        },
+      "P": {
+            "item": "dws:fire_core"
+        }
+    },
+    "result": [
+        {
+        "item": "dws:reguman_spawn_egg"
+    }  
+   ]
+ }
+}

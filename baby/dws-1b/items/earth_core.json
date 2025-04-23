@@ -1,0 +1,17 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "dws:earth_core",
+      "category": "items"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "earth_core"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.items"
+      }  
+    }
+  }
+}

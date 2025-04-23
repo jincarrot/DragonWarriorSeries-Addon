@@ -1,0 +1,885 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "dws:sori",
+			"runtime_identifier": "dws:sori",
+			"is_spawnable": false,
+			"is_summonable": true,
+			"is_experimental": false,
+			"animations": {
+				"look_at_target": "animation.common.look_at_target",
+				"attack": "animation.sori.attack",
+				"sit": "animation.sori.sit",
+				"always": "animation.sori.always"
+			},
+			"scripts": {
+				"animate": [
+					"sit"
+				]
+			},
+			"materials": {
+				"default" : "entity_alphatest"
+			}
+		},
+		"component_groups": {
+			"minecraft:sori_baby": {
+				"minecraft:is_baby": {
+				},
+				"minecraft:damage_sensor": [
+					{
+						"on_damage": {
+							"filters": {
+								"test": "is_family",
+								"subject": "other",
+								"value": "player"
+							}
+						},
+						"deals_damage": false
+					}
+				],
+				"minecraft:scale": {
+					"value": 0.75
+				},
+				"minecraft:ageable": {
+					"duration": 1200,
+					"feedItems": [
+						{
+							"item": "cooked_chicken",
+							"growth": 0.2
+						}
+					],
+					"grow_up": {
+						"event": "minecraft:sori_grow_up",
+						"target": "self"
+					}
+				},
+				"minecraft:behavior.follow_parent": {
+					"priority": 4,
+					"speed_multiplier": 1.0
+				},
+				"minecraft:behavior.panic": {
+					"priority": 0,
+					"speed_multiplier": 1.25
+				}
+			},
+			"minecraft:sori_adult": {
+				"minecraft:scale": {
+					"value": 1.0
+				},
+				"minecraft:collision_box": {
+					"width": 1.2,
+					"height": 1.5
+				},
+				"minecraft:breedable": {
+					"requireTame": true,
+					"breedsWith": {
+						"mateType": "dws:sori",
+						"babyType": "dws:sori",
+						"breed_event": {
+							"event": "minecraft:sori_born",
+							"target": "baby"
+						}
+					},
+					"breedItems": [
+						"clownfish",
+						"pufferfish"
+					]
+				},
+				"minecraft:attack": {
+					"damage": 10
+				},
+				"minecraft:behavior.leap_at_target": {
+					"priority": 4,
+					"target_dist": 0.3
+				},
+				"minecraft:behavior.hurt_by_target": {
+					"priority": 3,
+					"entity_types": [
+						{
+							"filters": {
+								"test": "is_family",
+								"subject": "other",
+								"operator": "!=",
+								"value": "player"
+							},
+							"max_dist": 8
+						}
+					]
+				}
+			},
+			"minecraft:sori_wild": {
+				"minecraft:tameable": {
+					"probability": 0.33,
+					"tameItems": [
+						"cooked_chicken"
+					],
+					"tame_event": {
+						"event": "minecraft:on_tame",
+						"target": "self"
+					}
+				},
+				"minecraft:variant": {
+					"value": 0
+				}
+			},
+			"minecraft:sori_tame": {
+				"minecraft:is_tamed": {
+				},
+				"minecraft:health": {
+					"value": 200,
+					"max": 200
+				},
+				"minecraft:loot": {
+					"table": "loot_tables/entities/sori.json"
+				},
+				"minecraft:sittable": {
+				},
+				"minecraft:leashable": {
+					"soft_distance": 4.0,
+					"hard_distance": 6.0,
+					"max_distance": 10.0,
+					"on_leash": {
+						"event": "minecraft:on_leash",
+						"target": "self"
+					},
+					"on_unleash": {
+						"event": "minecraft:on_unleash",
+						"target": "self"
+					}
+				},
+				"minecraft:behavior.stay_while_sitting": {
+					"priority": 1
+				},
+				"minecraft:behavior.pet_sleep_with_owner": {
+					"priority": 3,
+					"speed_multiplier": 1.25,
+					"search_radius": 10,
+					"search_height": 10,
+					"goal_radius": 1.0
+				},
+				"minecraft:on_wake_with_owner": {
+					"event": "minecraft:slept_with_owner",
+					"target": "self"
+				},
+				"minecraft:behavior.follow_owner": {
+					"priority": 6,
+					"speed_multiplier": 1.0,
+					"start_distance": 15,
+					"stop_distance": 5
+				},
+				"minecraft:behavior.breed": {
+					"priority": 7
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2
+				},
+				"minecraft:behavior.beg": {
+					"priority": 10,
+					"look_distance": 8,
+					"look_time": [ 2, 4 ],
+					"items": [
+						"cooked_chicken"
+					]
+				},
+				"minecraft:variant": {
+					"value": 1
+				}
+			},
+			"minecraft:gift_for_owner": {
+				"minecraft:behavior.drop_item_for": {
+					"priority": 1,
+					"speed_multiplier": 1.0,
+					"search_range": 5,
+					"search_height": 2,
+					"search_count": 0,
+					"goal_radius": 1.0,
+					"entity_types": [
+						{
+							"filters": {
+								"test": "is_family",
+								"subject": "other",
+								"value": "player"
+							},
+							"max_dist": 6
+						}
+					],
+					"max_dist":  5,
+					"drop_item_chance": 0.7,
+					"offering_distance": 5,
+					"loot_table": "loot_tables/gift.json",
+					"time_of_day_range": [ 0.74999, 0.80 ],
+					"on_drop_attempt": {
+						"event": "minecraft:gifted_owner",
+						"target": "self"
+					}
+				}
+			},
+			"minecraft:sori_leashed": {
+				"minecraft:behavior.move_towards_restriction": {
+					"priority": 2,
+					"speed_multiplier": 1.0
+				}
+			},
+			"dws:adult_attribute": {
+				"minecraft:environment_sensor": [
+					{
+						"filters": {
+							"test": "is_variant",
+							"value": 0
+						},
+						"event": "dws:adult_wild"
+					},
+					{
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_variant",
+									"value": 1
+								},
+								{
+									"test": "has_component",
+									"operator": "!=",
+									"value": "minecraft:is_baby"
+								}
+							]
+						},
+						"event": "dws:adult_tamed"
+					}
+				]
+			},
+			"dws:wild_attribute": {
+				"minecraft:health": {
+					"value": {
+						"range_min": 170,
+						"range_max": 200
+					},
+					"max":{
+						"range_min": 170,
+						"range_max": 200
+					}
+				},
+				"minecraft:attack": {
+					"damage": 10
+				}
+			},
+			"dws:baby_growth": {
+				"minecraft:interact": {
+					"play_sounds": "mob.cat.meow",
+					"on_interact": {
+						"filters": {
+							"all_of":[
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "hand",
+									"subject": "other",
+									"value": "bucket:1"
+								}
+							]
+						},
+						"event": "dws:use_milk",
+						"target": "self"
+					},
+					"use_item": true,
+					"transform_to_item": "bucket",
+					"interact_text": "action.use_milk.sori"
+				}
+			},
+			"dws:disgust_milk": {
+				"minecraft:behavior.avoid_mob_type": {
+					"priority": 1,
+					"entity_types": [
+						{
+							"filters": {
+								"test": "is_family",
+								"subject": "other",
+								"value": "player"
+							},
+							"max_dist": 3,
+							"walk_speed_multiplier": 1.5,
+							"sprint_speed_multiplier": 1.5
+						}
+					]
+				},
+				"minecraft:timer": {
+					"time": [ 30, 60 ],
+					"looping": false,
+					"time_down_event": {
+						"event": "dws:get_right",
+						"target": "self"
+					}
+				}
+			},
+			"dws:strengthen_0t1": {
+				"minecraft:interact": {
+					"play_sounds": "ambient",
+					"on_interact": {
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								},
+								{
+									"any_of": [
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:2"
+										},
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:3"
+										}
+									]
+								}
+							]
+						},
+						"event": "dws:strengthen_0to1"
+					},
+					"use_item": true,
+					"transform_to_item": "bucket:8",
+					"interact_text": "action.strengthen.sori"
+				},
+				"minecraft:health": {
+					"value": {
+						"range_min": 170,
+						"range_max": 200
+					},
+					"max":{
+						"range_min": 170,
+						"range_max": 200
+					}
+				},
+				"minecraft:attack": {
+					"damage": 10
+				}
+			},
+			"dws:strengthen_1t2": {
+				"minecraft:interact": {
+					"play_sounds": "levelup",
+					"on_interact": {
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								},
+								{
+									"any_of": [
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:2"
+										},
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:3"
+										}
+									]
+								}
+							]
+						},
+						"event": "dws:strengthen_1to2"
+					},
+					"use_item": true,
+					"transform_to_item": "bucket:8",
+					"interact_text": "action.strengthen.sori"
+				},
+				"minecraft:health": {
+					"value": 170,
+					"max": 200
+				},
+				"minecraft:scale": {
+					"value": 1.05
+				},
+				"minecraft:attack": {
+					"damage": 15
+				}
+			},
+			"dws:strengthen_2t3": {
+				"minecraft:interact": {
+					"play_sounds": "levelup",
+					"on_interact": {
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								},
+								{
+									"any_of": [
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:2"
+										},
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:3"
+										}
+									]
+								}
+							]
+						},
+						"event": "dws:strengthen_2to3"
+					},
+					"use_item": true,
+					"transform_to_item": "bucket:8",
+					"interact_text": "action.strengthen.sori"
+				},
+				"minecraft:health": {
+					"value": 170,
+					"max": 200
+				},
+				"minecraft:scale": {
+					"value": 1.1
+				},
+				"minecraft:attack": {
+					"damage": 15
+				}
+			},
+			"dws:strengthen_3t4": {
+				"minecraft:interact": {
+					"play_sounds": "levelup",
+					"on_interact": {
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								},
+								{
+									"any_of": [
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:2"
+										},
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:3"
+										}
+									]
+								}
+							]
+						},
+						"event": "dws:strengthen_3to4"
+					},
+					"use_item": true,
+					"transform_to_item": "bucket:8",
+					"interact_text": "action.strengthen.sori"
+				},
+				"minecraft:health": {
+					"value": 170,
+					"max": 200
+				},
+				"minecraft:scale": {
+					"value": 1.15
+				},
+				"minecraft:attack": {
+					"damage": 15,
+					"effect_name": "slowness",
+					"effect_duration": 3
+				}
+			},
+			"dws:strengthen_4t5": {
+				"minecraft:interact": {
+					"play_sounds": "levelup",
+					"on_interact": {
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								},
+								{
+									"any_of": [
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:2"
+										},
+										{
+											"test": "has_equipment",
+											"domain": "hand",
+											"subject": "other",
+											"value": "bucket:3"
+										}
+									]
+								}
+							]
+						},
+						"event": "dws:strengthen_4to5"
+					},
+					"use_item": true,
+					"transform_to_item": "bucket:8",
+					"interact_text": "action.strengthen.sori"
+				},
+				"minecraft:health": {
+					"minecraft:health": {
+						"value": 170,
+						"max": 200
+					}
+				},
+				"minecraft:scale": {
+					"value": 1.2
+				},
+				"minecraft:attack": {
+					"damage": 10,
+					"effect_name": "slowness",
+					"effect_duration": 3
+				}
+			},
+			"dws:strengthen_5max": {
+				"minecraft:health": {
+					"value": 170,
+					"max": 200
+				},
+				"minecraft:scale": {
+					"value": 1.25
+				},
+				"minecraft:attack": {
+					"damage": 30,
+					"effect_name": "slowness",
+					"effect_duration": 5
+				}
+			}
+		},
+		
+		"components": {
+			"minecraft:type_family": {
+				"family": [ "dragon", "sori", "cat" ]
+			},
+			"minecraft:fire_immune": {
+			},
+			"minecraft:nameable": {
+			},
+			"minecraft:health": {
+				"value": 170,
+				"max": 200
+			},
+			"minecraft:attack": {
+				"damage": 10
+			},
+			"minecraft:breathable": {
+				"totalSupply": 15,
+				"suffocateTime": 0
+			},
+			"minecraft:collision_box": {
+				"width": 1.2,
+				"height": 1.5
+			},
+			"minecraft:healable": {
+				"items": [
+					{
+						"item": "cooked_chicken",
+						"heal_amount": 4
+					}
+				]
+			},
+			"minecraft:movement": {
+				"value": 0.3
+			},
+			"minecraft:navigation.walk": {
+				"avoid_damage_blocks": true,
+				"can_path_over_water": true,
+				"can_walk_in_lava": true,
+				"aviod_damage_blocks": true,
+				"avoid_portals": true,
+				"avoid_water":true,
+				"can_open_doors": true,
+				"can_path_over_lava": true,
+				"can_walk": true
+			},
+			"minecraft:movement.basic": {
+			},
+			"minecraft:jump.static": {
+				"jump_power": 0.5
+			},
+			"minecraft:can_climb": {
+			},
+			"minecraft:behavior.float": {
+				"priority": 0
+			},
+			"minecraft:behavior.melee_attack": {
+				"priority": 5,
+				"target_dist": 2.0,
+				"track_target": true,
+				"reach_multiplier": 1.2
+			},
+			"minecraft:behavior.tempt": {
+				"priority": 5,
+				"speed_multiplier": 1.0,
+				"items": [
+					"cooked_chicken"
+				]
+			},
+			"minecraft:behavior.random_stroll": {
+				"priority": 7
+			},
+			"minecraft:behavior.look_at_player": {
+				"priority": 8,
+				"look_distance": 6,
+				"probability": 0.02
+			},
+			"minecraft:behavior.random_look_around": {
+				"priority": 9
+			},
+			"minecraft:physics": {
+			}
+		},
+		
+		"events": {
+			"minecraft:entity_spawned": {
+				"randomize": [
+					{
+						"weight": 1000,
+						"remove": {
+						},
+						"add": {
+							"component_groups": [
+								"minecraft:sori_adult",
+								"minecraft:sori_wild",
+								"dws:adult_attribute"
+							]
+						}
+					},
+					{
+						"weight": 1,
+						"remove": {
+						},
+						"add": {
+							"component_groups": [
+								"minecraft:sori_baby",
+								"minecraft:sori_wild",
+								"dws:baby_growth"
+							]
+						}
+					}
+				]
+			},
+			"minecraft:sori_grow_up": {
+				"remove": {
+					"component_groups": [
+						"minecraft:sori_baby",
+						"dws:disgust_milk",
+						"dws:baby_growth"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"minecraft:sori_adult",
+						"dws:adult_attribute"
+					]
+				}
+			},
+			"minecraft:sori_born": {
+				"remove": {
+				},
+				"add": {
+					"component_groups": [
+						"minecraft:sori_baby",
+						"dws:baby_growth",
+						"minecraft:sori_tame"
+					]
+				}
+			},
+			"minecraft:on_tame": {
+				"remove": {
+					"component_groups": [
+						"minecraft:sori_wild"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"minecraft:sori_tame",
+						"dws:adult_attribute"
+					]
+				}
+			},
+			"minecraft:slept_with_owner": {
+				"add": {
+					"component_groups": [
+						"minecraft:gift_for_owner"
+					]
+				}
+			},
+			"minecraft:gifted_owner": {
+				"remove": {
+					"component_groups": [
+						"minecraft:gift_for_owner"
+					]
+				}
+			},
+			"minecraft:on_leash": {
+				"add": {
+					"component_groups": [
+						"minecraft:sori_leashed"
+					]
+				}
+			},
+			"minecraft:on_unleash": {
+				"remove": {
+					"component_groups": [
+						"minecraft:sori_leashed"
+					]
+				}
+			},
+			"dws:adult_wild": {
+				"remove": {
+					"component_groups": [
+						"dws:adult_attribute"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:wild_attribute"
+					]
+				}
+			},
+			"dws:adult_tamed": {
+				"remove": {
+					"component_groups": [
+						"dws:adult_attribute"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:strengthen_0t1"
+					]
+				}
+			},
+			"dws:use_milk": {
+				"randomize": [
+					{
+						"weight": 3,
+						"remove": {
+							"component_groups": [
+								"minecraft:sori_baby",
+								"dws:baby_growth"
+							]
+						},
+						"add": {
+							"component_groups": [
+								"minecraft:sori_adult",
+								"dws:adult_attribute"
+							]
+						}
+					},
+					{
+						"weight": 6,
+						"remove": {
+							"component_groups": [
+								"dws:baby_growth"
+							]
+						},
+						"add": {
+							"component_groups": [
+								"dws:disgust_milk"
+							]
+						}
+					}
+				]
+			},
+			"dws:get_right": {
+				"remove": {
+					"component_groups": [
+						"dws:disgust_milk"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:baby_growth"
+					]
+				}
+			},
+			"dws:strengthen_0to1": {
+				"remove": {
+					"component_groups": [
+						"dws:strengthen_0t1"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:strengthen_1t2"
+					]
+				}
+			},
+			"dws:strengthen_1to2": {
+				"remove": {
+					"component_groups": [
+						"dws:strengthen_1t2"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:strengthen_2t3"
+					]
+				}
+			},
+			"dws:strengthen_2to3": {
+				"remove": {
+					"component_groups": [
+						"dws:strengthen_2t3"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:strengthen_3t4"
+					]
+				}
+			},
+			"dws:strengthen_3to4": {
+				"remove": {
+					"component_groups": [
+						"dws:strengthen_3t4"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:strengthen_4t5"
+					]
+				}
+			},
+			"dws:strengthen_4to5": {
+				"remove": {
+					"component_groups": [
+						"dws:strengthen_4t5"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:strengthen_5max"
+					]
+				}
+			}
+		}
+	}
+}

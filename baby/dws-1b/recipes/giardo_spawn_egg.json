@@ -1,0 +1,29 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier":"dws:giardo_spawn_egg"
+        },
+
+
+        "tags": ["crafting_table"],
+        "pattern": [
+            "###",
+            "#P#",
+            "###"
+    ],
+    "key": {
+      "#": {
+            "item": "dws:earth_energy"
+        },
+      "P": {
+            "item": "dws:earth_core"
+        }
+    },
+    "result": [
+        {
+        "item": "dws:giardo_spawn_egg"
+    }  
+   ]
+ }
+}

@@ -1,0 +1,48 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "dws:treef",
+			"basic_render_parameters": {
+				"material": "particles_blend",
+				"texture": "textures/particles/treef"
+			}
+		},
+		"curves": {
+			"variable.aureolecurve": {
+				"type": "bezier",
+				"nodes": [ 0.0, 0.3, 0.3, 0.0 ],
+				"input": "variable.particle_age",
+				"horizontal_range": 2
+			}
+		},
+		"components": {
+			"minecraft:emitter_rate_instant": {
+				"num_particles": 1
+			},
+			"minecraft:emitter_lifetime_looping": {
+				"active_time": 0.2
+			},
+			"minecraft:emitter_shape_point":{
+				"offset":[ "variable.particle_random_1-0.5", 0.01, "variable.particle_random_2-0.5" ],
+				"direction": [ 0, 0.01, 0 ]
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": 2
+			},
+			"minecraft:particle_appearance_billboard": {
+				"size":["variable.aureolecurve*0.75","variable.aureolecurve*0.75"],
+				"facing_camera_mode": "direction_z"
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": {
+					"gradient": [
+						[ 0.7019, 0.3725, 0.8941, 1 ],
+						[ 0.3725, 0.8039, 0.8941, 1 ]
+					],
+					"interpolant": "variable.aureolecurve"
+				}
+			}
+		}
+	}
+}

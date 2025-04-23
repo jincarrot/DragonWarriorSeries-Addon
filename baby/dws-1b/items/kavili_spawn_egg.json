@@ -1,0 +1,17 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "dws:kavili_spawn_egg",
+      "category": "items"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "kavili_spawn_egg"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.items"
+      }  
+    }
+  }
+}

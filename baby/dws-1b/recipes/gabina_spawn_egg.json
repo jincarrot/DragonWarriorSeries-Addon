@@ -1,0 +1,29 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier":"dws:gabina_spawn_egg"
+        },
+
+
+        "tags": ["crafting_table"],
+        "pattern": [
+            "###",
+            "#P#",
+            "###"
+    ],
+    "key": {
+      "#": {
+            "item": "dws:water_energy"
+        },
+      "P": {
+            "item": "dws:water_core"
+        }
+    },
+    "result": [
+        {
+        "item": "dws:gabina_spawn_egg"
+    }  
+   ]
+ }
+}

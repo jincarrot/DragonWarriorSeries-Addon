@@ -1,0 +1,24 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "§6§l斗龙宝贝§r v2.1.0",
+		"description": "§6§l斗龙系列§r§e第一部分(v2.1.0)，§b斗龙宝贝的预发布正式包!§b输入/function ver 获取测试包信息！",
+		"uuid": "f502d686-021b-4ea4-992f-da29a895ec7b",
+		"version": [2, 1, 0],
+		"min_engine_version": [1, 20, 0]
+	},
+	"metadata": { 
+		"authors": ["jincarrot"],
+		"generated_with": {
+			"blockbench_entity_wizard": ["1.0.6"]
+		}
+	},
+	"modules": [
+		{
+			"description": "dragon_pt_1",
+			"type": "resources",
+			"uuid": "8a67f662-ec96-49e3-b5ee-c97573a470d4",
+			"version": [2, 1, 0]
+		}
+	]
+}

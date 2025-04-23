@@ -1,0 +1,924 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "dws:giardo",
+			"runtime_identifier": "dws:giardo",
+			"is_spawnable": false,
+			"is_summonable": true,
+			"is_experimental": false,
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"animations": {
+				"sitting": "animation.dragons.sitting",
+				"standing": "animation.dragons.standing"
+			},
+			"scripts": {
+				"animate": [
+					{"sitting": "q.is_sitting"},
+					{"standing": "!q.is_sitting"}
+				]
+			}
+		},
+		"component_groups": {
+			"to_giardo_v2": {
+				"minecraft:transformation": {
+					"into": "dws:giardo_v2",
+					"keep_owner": true
+				}
+			},
+			"minecraft:giardo_adult": {
+				"minecraft:scale": {
+					"value": 1.0
+				},
+				"minecraft:collision_box": {
+					"width": 0.8,
+					"height": 1.2
+				},
+				"minecraft:attack": {
+					"damage": 10
+				},
+				"minecraft:behavior.leap_at_target": {
+					"priority": 4,
+					"target_dist": 0.3
+				},
+				"minecraft:behavior.hurt_by_target": {
+					"priority": 3,
+					"entity_types": [
+						{
+							"filters": {
+								"test": "is_family",
+								"subject": "other",
+								"operator": "!=",
+								"value": "player"
+							},
+							"max_dist": 8
+						}
+					]
+				}
+			},
+			"minecraft:giardo_wild": {
+				"minecraft:tameable": {
+					"probability": 1,
+					"tameItems": [
+						"cooked_chicken"
+					],
+					"tame_event": {
+						"event": "minecraft:on_tame",
+						"target": "self"
+					}
+				},
+				"minecraft:variant": {
+					"value": 0
+				}
+			},
+			"minecraft:giardo_tame": {
+				"minecraft:is_tamed": {},
+				"minecraft:health": {
+					"value": 20,
+					"max": 20
+				},
+				"minecraft:loot": {
+					"table": "loot_tables/entities/giardo.json"
+				},
+				"minecraft:sittable": {},
+				"minecraft:leashable": {
+					"soft_distance": 4.0,
+					"hard_distance": 6.0,
+					"max_distance": 10.0,
+					"on_leash": {
+						"event": "minecraft:on_leash",
+						"target": "self"
+					},
+					"on_unleash": {
+						"event": "minecraft:on_unleash",
+						"target": "self"
+					}
+				},
+				"minecraft:behavior.stay_while_sitting": {
+					"priority": 1
+				},
+				"minecraft:behavior.pet_sleep_with_owner": {
+					"priority": 3,
+					"speed_multiplier": 1.0,
+					"search_radius": 10,
+					"search_height": 10,
+					"goal_radius": 1.0
+				},
+				"minecraft:on_wake_with_owner": {
+					"event": "minecraft:slept_with_owner",
+					"target": "self"
+				},
+				"minecraft:behavior.follow_owner": {
+					"priority": 6,
+					"speed_multiplier": 0.8,
+					"start_distance": 15,
+					"stop_distance": 5
+				},
+				"minecraft:behavior.beg": {
+					"priority": 10,
+					"look_distance": 8,
+					"look_time": [
+						2,
+						4
+					],
+					"items": [
+						"cooked_chicken"
+					]
+				},
+				"minecraft:variant": {
+					"value": 1
+				}
+			},
+			"minecraft:gift_for_owner": {
+				"minecraft:behavior.drop_item_for": {
+					"priority": 1,
+					"speed_multiplier": 1.0,
+					"search_range": 5,
+					"search_height": 2,
+					"search_count": 0,
+					"goal_radius": 1.0,
+					"entity_types": [
+						{
+							"filters": {
+								"test": "is_family",
+								"subject": "other",
+								"value": "player"
+							},
+							"max_dist": 6
+						}
+					],
+					"max_dist": 5,
+					"drop_item_chance": 0.7,
+					"offering_distance": 5,
+					"loot_table": "loot_tables/gift.json",
+					"time_of_day_range": [
+						0.74999,
+						0.80
+					],
+					"on_drop_attempt": {
+						"event": "minecraft:gifted_owner",
+						"target": "self"
+					}
+				}
+			},
+			"minecraft:giardo_leashed": {
+				"minecraft:behavior.move_towards_restriction": {
+					"priority": 2,
+					"speed_multiplier": 1.0
+				}
+			},
+			"dws:adult_attribute": {
+				"minecraft:environment_sensor": [
+					{
+						"filters": {
+							"test": "is_variant",
+							"value": 0
+						},
+						"event": "dws:adult_wild"
+					},
+					{
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_variant",
+									"value": 1
+								},
+								{
+									"test": "has_component",
+									"operator": "!=",
+									"value": "minecraft:is_baby"
+								}
+							]
+						},
+						"event": "dws:adult_tamed"
+					}
+				]
+			},
+			"dws:wild_attribute": {
+				"minecraft:health": {
+					"value": {
+						"range_min": 20,
+						"range_max": 20
+					},
+					"max": {
+						"range_min": 20,
+						"range_max": 20
+					}
+				},
+				"minecraft:attack": {
+					"damage": 3
+				}
+			},
+			"dws:lv1": {},
+			"dws:lv2": {
+				"minecraft:health": {
+					"value": 60,
+					"max": 60
+				},
+				"minecraft:attack": {
+					"damage": 3
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv3": {
+				"minecraft:health": {
+					"value": 100,
+					"max": 100
+				},
+				"minecraft:attack": {
+					"damage": 5
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv4": {
+				"minecraft:health": {
+					"value": 130,
+					"max": 130
+				},
+				"minecraft:attack": {
+					"damage": 8
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv5": {
+				"minecraft:health": {
+					"value": 150,
+					"max": 150
+				},
+				"minecraft:attack": {
+					"damage": 8,
+					"effect_name": "slowness",
+					"effect_duration": 5
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv6": {
+				"minecraft:health": {
+					"value": 170,
+					"max": 170
+				},
+				"minecraft:attack": {
+					"damage": 8,
+					"effect_name": "slowness",
+					"effect_duration": 5
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv7": {
+				"minecraft:health": {
+					"value": 190,
+					"max": 190
+				},
+				"minecraft:attack": {
+					"damage": 9,
+					"effect_name": "slowness",
+					"effect_duration": 5
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv8": {
+				"minecraft:health": {
+					"value": 210,
+					"max": 210
+				},
+				"minecraft:attack": {
+					"damage": 9,
+					"effect_name": "slowness",
+					"effect_duration": 5
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv9": {
+				"minecraft:health": {
+					"value": 230,
+					"max": 230
+				},
+				"minecraft:attack": {
+					"damage": 10,
+					"effect_name": "slowness",
+					"effect_duration": 5
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			},
+			"dws:lv10": {
+				"minecraft:health": {
+					"value": 250,
+					"max": 250
+				},
+				"minecraft:attack": {
+					"damage": 10,
+					"effect_name": "slowness",
+					"effect_duration": 5
+				},
+				"minecraft:behavior.owner_hurt_by_target": {
+					"priority": 1,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.owner_hurt_target": {
+					"priority": 2,
+					"max_dist": 3,
+					"reevaluate_description": true
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 5,
+					"target_dist": 2.0,
+					"track_target": true,
+					"reach_multiplier": 1.2,
+					"speed_multiplier": 1.5
+				},
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 3,
+					"reselect_targets": true,
+					"within_radius": 25.0,
+					"must_see_forget_duration": 17.0,
+					"entity_types": [
+						{
+							"filters": {
+								"any_of": [
+									{
+										"test": "is_family",
+										"subject": "other",
+										"operator": "==",
+										"value": "monster"
+									}
+								]
+							},
+							"max_dist": 35
+						}
+					]
+				}
+			}
+		},
+		"components": {
+			"minecraft:type_family": {
+				"family": [
+					"dragon",
+					"giardo"
+				]
+			},
+			"minecraft:nameable": {},
+			"minecraft:health": {
+				"value": 20,
+				"max": 20
+			},
+			"minecraft:healable": {
+				"items": [
+					{
+						"item": "cooked_chicken",
+						"heal_amount": 4
+					}
+				]
+			},
+			"minecraft:breathable": {
+				"totalSupply": 15,
+				"suffocateTime": 0
+			},
+			"minecraft:collision_box": {
+				"width": 0.8,
+				"height": 1.2
+			},
+			"minecraft:movement": {
+				"value": 0.3
+			},
+			"minecraft:navigation.walk": {
+				"avoid_damage_blocks": true,
+				"can_path_over_water": true,
+				"can_walk_in_lava": true,
+				"aviod_damage_blocks": true,
+				"avoid_portals": true,
+				"avoid_water": true,
+				"can_open_doors": true,
+				"can_path_over_lava": true,
+				"can_walk": true
+			},
+			"minecraft:movement.basic": {},
+			"minecraft:jump.static": {
+				"jump_power": 0.5
+			},
+			"minecraft:can_climb": {},
+			"minecraft:behavior.float": {
+				"priority": 0
+			},
+			"minecraft:behavior.tempt": {
+				"priority": 5,
+				"speed_multiplier": 1.0,
+				"items": [
+					"cooked_chicken"
+				]
+			},
+			"minecraft:behavior.random_stroll": {
+				"priority": 7
+			},
+			"minecraft:behavior.look_at_player": {
+				"priority": 8,
+				"look_distance": 6,
+				"probability": 0.02
+			},
+			"minecraft:behavior.random_look_around": {
+				"priority": 9
+			},
+			"minecraft:physics": {}
+		},
+		"events": {
+			"dws:levelup": {
+				"remove": {},
+				"add": {
+					"component_groups": [
+						"to_giardo_v2"
+					]
+				}
+			},
+			"minecraft:entity_transformed": {
+				"remove": {},
+				"add": {
+					"component_groups": [
+						"minecraft:giardo_adult",
+						"minecraft:giardo_tame",
+						"dws:adult_attribute"
+					]
+				}
+			},
+			"minecraft:entity_spawned": {
+				"add": {
+					"component_groups": [
+						"minecraft:giardo_adult",
+						"minecraft:giardo_wild",
+						"dws:adult_attribute"
+					]
+				}
+			},
+			"minecraft:on_tame": {
+				"remove": {
+					"component_groups": [
+						"minecraft:giardo_wild"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"minecraft:giardo_tame",
+						"dws:adult_attribute"
+					]
+				}
+			},
+			"minecraft:slept_with_owner": {
+				"add": {
+					"component_groups": [
+						"minecraft:gift_for_owner"
+					]
+				}
+			},
+			"minecraft:gifted_owner": {
+				"remove": {
+					"component_groups": [
+						"minecraft:gift_for_owner"
+					]
+				}
+			},
+			"minecraft:on_leash": {
+				"add": {
+					"component_groups": [
+						"minecraft:giardo_leashed"
+					]
+				}
+			},
+			"minecraft:on_unleash": {
+				"remove": {
+					"component_groups": [
+						"minecraft:giardo_leashed"
+					]
+				}
+			},
+			"dws:adult_wild": {
+				"remove": {
+					"component_groups": [
+						"dws:adult_attribute"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:wild_attribute"
+					]
+				}
+			},
+			"dws:adult_tamed": {
+				"remove": {
+					"component_groups": [
+						"dws:adult_attribute"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv1"
+					]
+				}
+			},
+			"dws:lv1_2": {
+				"remove": {
+					"component_groups": [
+						"dws:lv1"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv2"
+					]
+				}
+			},
+			"dws:lv2_3": {
+				"remove": {
+					"component_groups": [
+						"dws:lv2"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv3"
+					]
+				}
+			},
+			"dws:lv3_4": {
+				"remove": {
+					"component_groups": [
+						"dws:lv3"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv4"
+					]
+				}
+			},
+			"dws:lv4_5": {
+				"remove": {
+					"component_groups": [
+						"dws:lv4"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv5"
+					]
+				}
+			},
+			"dws:lv5_6": {
+				"remove": {
+					"component_groups": [
+						"dws:lv5"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv6"
+					]
+				}
+			},
+			"dws:lv6_7": {
+				"remove": {
+					"component_groups": [
+						"dws:lv6"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv7"
+					]
+				}
+			},
+			"dws:lv7_8": {
+				"remove": {
+					"component_groups": [
+						"dws:lv7"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv8"
+					]
+				}
+			},
+			"dws:lv8_9": {
+				"remove": {
+					"component_groups": [
+						"dws:lv8"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv9"
+					]
+				}
+			},
+			"dws:lv9_10": {
+				"remove": {
+					"component_groups": [
+						"dws:lv9"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dws:lv10"
+					]
+				}
+			}
+		}
+	}
+}

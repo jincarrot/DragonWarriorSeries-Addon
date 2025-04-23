@@ -1,0 +1,70 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "§6§etest§r v2.1.0",
+		"description": "§6§l斗龙系列(dws)§r§e第一部分(v2.1.0)，§b斗龙宝贝的预发布正式包!§b输入/function ver 获取测试包信息！",
+		"uuid": "3942cd8a-ce23-4f40-8b8f-1abfef756c5c",
+		"version": [
+			2,
+			1,
+			0
+		],
+		"min_engine_version": [
+			1,
+			20,
+			0
+		]
+	},
+	"metadata": {
+		"authors": [
+			"jincarrot"
+		],
+		"generated_with": {
+			"blockbench_entity_wizard": [
+				"1.0.6"
+			]
+		}
+	},
+	"modules": [
+		{
+			"description": "dws-pt-1",
+			"version": [
+				2,
+				1,
+				0
+			],
+			"uuid": "d13f9231-8c81-4043-aa1a-6648e2615972",
+			"type": "data"
+		},
+		{
+			"description": "dws-pt-1 script",
+			"type": "script",
+			"language": "javascript",
+			"uuid": "1a1b52fc-7653-4a76-92b7-9cdF026574ae",
+			"version": [
+				2,
+				1,
+				0
+			],
+			"entry": "scripts/index.js"
+		}
+	],
+	"dependencies": [
+		{
+			"uuid": "f502d686-021b-4ea4-992f-da29a895ec7b",
+			"version": [
+				2,
+				1,
+				0
+			]
+		},
+		{
+			"module_name": "@minecraft/server",
+			"version": "1.9.0"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "1.1.0"
+		}
+	]
+}

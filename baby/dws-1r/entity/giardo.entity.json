@@ -1,0 +1,46 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:giardo",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/giardo"
+			},
+			"geometry": {
+				"default": "geometry.giardo"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"texture": "giardo_spawn_egg"
+			},
+			"animations": {
+				"move": "controller.animation.giardo.move",
+				"attack": "animation.giardo.attack",
+				"sit": "animation.giardo.sit",
+				"always": "animation.giardo.always",
+				"walk": "animation.giardo.walk",
+				"gain_exp": "animation.giardo.gain_exp",
+				"lt": "animation.common.look_at_target",
+				"lp": "animation.common.look_at_player"
+			},
+			"scripts": {
+				"animate": [
+					{"move": "query.is_moving"},
+					{"attack":"v.attack_time"},
+					{"sit":"query.is_sitting"},
+					"always",
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"earthf": "dws:earthf"
+			}
+		}
+	}
+}

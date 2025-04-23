@@ -1,0 +1,44 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:reguman",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/reguman"
+			},
+			"geometry": {
+				"default": "geometry.reguman"
+			},
+			"render_controllers": ["controller.render.default"],
+			"spawn_egg": {
+				"texture": "reguman_spawn_egg"
+			},
+			"animations":{
+				"move": "controller.animation.reguman.move",
+				"attack": "animation.reguman.attack",
+				"sit":"animation.reguman.sit",
+				"always":"animation.reguman.always",
+				"walk": "animation.reguman.walk",
+				"gain_exp":"animation.reguman.gain_exp",
+				"lt": "animation.common.look_at_target",
+				"lp": "animation.common.look_at_player"
+			},
+			"scripts": {
+				"animate": [
+					{"move": "query.is_moving"},
+					{"attack":"v.attack_time"},
+					{"sit":"query.is_sitting"},
+					"always",
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"firef": "dws:firef"
+			}
+		}
+	}
+}

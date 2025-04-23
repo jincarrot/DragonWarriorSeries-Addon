@@ -1,0 +1,46 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:gabina",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/gabina"
+			},
+			"geometry": {
+				"default": "geometry.gabina"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"texture": "gabina_spawn_egg"
+			},
+			"animations": {
+				"move": "controller.animation.gabina.move",
+				"attack": "animation.gabina.attack",
+				"sit": "animation.gabina.sit",
+				"always": "animation.gabina.always",
+				"walk": "animation.gabina.walk",
+				"gain_exp": "animation.gabina.gain_exp",
+				"lt": "animation.common.look_at_target",
+				"lp": "animation.common.look_at_player"
+			},
+			"scripts": {
+				"animate": [
+					{"move": "query.is_moving"},
+					{"attack":"v.attack_time"},
+					{"sit":"query.is_sitting"},
+					"always",
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"waterf": "dws:waterf"
+			}
+		}
+	}
+}
