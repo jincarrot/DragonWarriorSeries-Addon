@@ -778,7 +778,7 @@ export default class Warrior {
             }
         })
     }
-    /**宝贝龙保护 */
+    /**宝贝龙过远保护 */
     protect() {
         for (let type in this.dragons) {
             let dragon = world.getEntity(this.dragons[type]);
@@ -831,10 +831,20 @@ export default class Warrior {
 
     /**
      * 保存数据
+     * @param {String | Array<String>} property 待保存的数据
      */
-    save(){
+    save(property = ""){
+        if (property){
+            //保存指定数据
+            property = typeof property == "string" ? [property] : property;
+            for (let i of property){
+                this.base.setDynamicProperty(i, JSON.stringify(this[i]));
+            }
+            return;
+        }
+        //保存全部数据
         for (let type of Object.keys(this)){
-            if (['name', 'base'].indexOf(type) < 0) return;
+            if (['name', 'base'].indexOf(type) < 0) continue;
             this.base.setDynamicProperty(type, JSON.stringify(this[type]))
         }
     }
