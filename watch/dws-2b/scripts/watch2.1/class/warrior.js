@@ -130,7 +130,7 @@ export default class Warrior {
                         closest: 1
                     })[0];
                     this.dragons[type] = base.id;
-                    this.base.setDynamicProperty('dragons', JSON.stringify(this.dragons));
+                    this.save('dragons', JSON.stringify(this.dragons));
                     //add the health and the energy to the dragon
                     let data = JSON.parse(this.base.getDynamicProperty('dragon_data_temp') || "{}");
                     if (type in data) {
@@ -821,6 +821,8 @@ export default class Warrior {
                     this.dragon_data_temp[type] = {
                         'health': [0, 20],
                         'energy': [0, 0],
+                        'exp': 0,
+                        'maxLevel': 10,
                         'interact': -1
                     };
                 }
@@ -831,21 +833,22 @@ export default class Warrior {
 
     /**
      * 保存数据
-     * @param {String | Array<String>} property 待保存的数据
+     * @param {string | Array<string>} property 待保存的数据名称
+     * @param {string} [data=""] 要保存的数据内容
      */
-    save(property = ""){
+    save(property = "", data = ""){
         if (property){
             //保存指定数据
             property = typeof property == "string" ? [property] : property;
             for (let i of property){
-                this.base.setDynamicProperty(i, JSON.stringify(this[i]));
+                this.base.setDynamicProperty(i, JSON.stringify(data ? data : this[i]));
             }
             return;
         }
         //保存全部数据
         for (let type of Object.keys(this)){
             if (['name', 'base'].indexOf(type) < 0) continue;
-            this.base.setDynamicProperty(type, JSON.stringify(this[type]))
+            this.base.setDynamicProperty(type, JSON.stringify(this[type]));
         }
     }
 }

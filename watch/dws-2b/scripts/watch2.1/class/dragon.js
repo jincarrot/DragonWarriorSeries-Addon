@@ -3,6 +3,7 @@ import { Ability } from "./ability";
 import { Dragons } from "../values/constants";
 import { getEl, title } from "../functions/oracle";
 import { AbProcess } from "../values/abilities";
+import Warrior from "./warrior";
 
 /**
  * @class
@@ -26,7 +27,7 @@ export default class Dragon {
     priority;//优先攻击谁，true为怪物,false为生物
 
     /**
-     * @param {Entity} base
+     * @param {Entity | string} base
      * @param {string} owner
      * @param {string} uuid
      * @param {string} type
@@ -41,7 +42,7 @@ export default class Dragon {
      * @param {boolean} priority
      */
     constructor(base, owner) {
-        this.base = base;
+        this.base = typeof base == 'string' ? world.getEntity(base) : base;
         this.uuid = base.id;
         this.owner = owner;
         this.type = this.base.typeId.split('_')[0];
@@ -134,12 +135,12 @@ export default class Dragon {
                 this.base.setDynamicProperty('array', " ");
                 return;
             }
-            else system.runTimeout(()=>this.base.setDynamicProperty('array', ab.taskId), 30);
+            else system.runTimeout(() => this.base.setDynamicProperty('array', ab.taskId), 30);
         }
         ab.run();
     }
     /**停止使用能量阵 */
-    stopArray(){
+    stopArray() {
         if (typeof this.base.getDynamicProperty('array') == 'number') {
             AbProcess[this.base.getDynamicProperty('array')].stop();
             delete AbProcess[this.base.getDynamicProperty('array')];
@@ -153,9 +154,9 @@ export default class Dragon {
         this.base.setDynamicProperty('abilities', JSON.stringify(this.abilities));
     }
     /**交互功能 */
-    Interact(time){
+    Interact(time) {
         if (time > 20) time = 20;
-        switch(this.el) {
+        switch (this.el) {
             case "gold":
                 //采矿
                 var reward = {};
@@ -163,7 +164,7 @@ export default class Dragon {
                 reward['gold_ingot'] = Math.floor(time * 1.5);
                 if (time > 8) reward['iron_ingot'] = (time - 5) * 2;
                 if (time > 15) reward['diamond'] = (time - 10) * 1;
-                for (let type in reward){
+                for (let type in reward) {
                     let item = new ItemStack(`minecraft:${type}`, reward[type]);
                     this.base.dimension.spawnItem(item, this.base.location);
                 }
@@ -172,10 +173,10 @@ export default class Dragon {
                 //种植
                 var reward = {};
                 let CropTypes = ['wheat', 'carrot', 'potato', 'beetroot'];
-                for (let i = 0; i < time; i++){
+                for (let i = 0; i < time; i++) {
                     reward[CropTypes[Math.floor(Math.random() * CropTypes.length)]] = reward[CropTypes[Math.floor(Math.random() * CropTypes.length)]] ? reward[CropTypes[Math.floor(Math.random() * CropTypes.length)]] + 5 : 5;
                 }
-                for (let type in reward){
+                for (let type in reward) {
                     let item = new ItemStack(`minecraft:${type}`, reward[type]);
                     this.base.dimension.spawnItem(item, this.base.location);
                 }
@@ -184,11 +185,11 @@ export default class Dragon {
                 //捕鱼
                 var reward = {};
                 reward['cod'] = time * 4;
-                for (let i = time - 15; i >= 0; i--){
+                for (let i = time - 15; i >= 0; i--) {
                     if (Math.random() < 0.08) reward['fishing_rod'] = 1;
                     if (Math.random() > 0.92) reward['bow'] = 1;
                 }
-                for (let type in reward){
+                for (let type in reward) {
                     let item = new ItemStack(`minecraft:${type}`, reward[type]);
                     this.base.dimension.spawnItem(item, this.base.location);
                 }
@@ -197,10 +198,10 @@ export default class Dragon {
                 //烹饪
                 var reward = {};
                 let FoodTypes = ['cooked_beef', 'cooked_chicken', 'cooked_mutton', 'cooked_porkchop', 'cooked_rabbit', 'cooked_cod', 'cooked_salmon'];
-                for (let i = 0; i < time; i++){
+                for (let i = 0; i < time; i++) {
                     reward[FoodTypes[Math.floor(Math.random() * FoodTypes.length)]] = reward[FoodTypes[Math.floor(Math.random() * FoodTypes.length)]] ? reward[FoodTypes[Math.floor(Math.random() * FoodTypes.length)]] + 2 : 2;
                 }
-                for (let type in reward){
+                for (let type in reward) {
                     let item = new ItemStack(`minecraft:${type}`, reward[type]);
                     this.base.dimension.spawnItem(item, this.base.location);
                 }
@@ -257,6 +258,18 @@ export default class Dragon {
     reduceEnergy(amount) {
         this.energy[0] -= amount;
         this.base.setDynamicProperty('energy0', this.energy[0]);
+    }
+    /**
+     * 写入暂存数据
+     * @param {Warrior} owner 
+     */
+    saveData(owner) {
+        let data = JSON.parse(owner.dragon_data_temp || "{}")[this.type];
+        if (data) {
+            this.base.setDynamicProperty('energy0', data[type]['energy'][0]);
+            this.base.setDynamicProperty('exp', data[type]['exp']);
+            this.base.getComponent('minecraft:health').setCurrentValue(data[type]['health'][0]);
+        }
     }
     /**设置 */
     Option() {
