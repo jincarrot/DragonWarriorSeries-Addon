@@ -1,0 +1,10 @@
+{
+    "entry": "adventure.js",
+    "name": "adventure",
+    "type": "lse-quickjs",
+    "dependencies": [
+        {
+            "name": "legacy-script-engine-quickjs"
+        }
+    ]
+}

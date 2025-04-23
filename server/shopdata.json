@@ -1,0 +1,566 @@
+{
+    "Buy": [
+        {
+            "name": "方块",
+            "type": "group",
+            "image": "textures/ui/icon_recipe_construction",
+            "data": [
+                {
+                    "name": "羊毛",
+                    "type": "group",
+                    "image": "textures/blocks/wool_colored_white",
+                    "data": [
+                        {
+                            "name": "白色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_white",
+                            "data": [
+                                {
+                                    "id": "minecraft:white_wool",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "橙色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_orange",
+                            "data": [
+                                {
+                                    "id": "minecraft:orange_wool",
+                                    "aux": 1,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "品红色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_magenta",
+                            "data": [
+                                {
+                                    "id": "minecraft:magenta_wool",
+                                    "aux": 2,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "淡蓝色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_light_blue",
+                            "data": [
+                                {
+                                    "id": "minecraft:light_blue_wool",
+                                    "aux": 3,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "黄色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_yellow",
+                            "data": [
+                                {
+                                    "id": "minecraft:yellow_wool",
+                                    "aux": 4,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "黄绿色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_lime",
+                            "data": [
+                                {
+                                    "id": "minecraft:lime_wool",
+                                    "aux": 5,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "粉红色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_pink",
+                            "data": [
+                                {
+                                    "id": "minecraft:pink_wool",
+                                    "aux": 6,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "灰色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_gray",
+                            "data": [
+                                {
+                                    "id": "minecraft:gray_wool",
+                                    "aux": 7,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "淡灰色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_silver",
+                            "data": [
+                                {
+                                    "id": "minecraft:light_gray_wool",
+                                    "aux": 8,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "青色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_cyan",
+                            "data": [
+                                {
+                                    "id": "minecraft:cyan_wool",
+                                    "aux": 9,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "紫色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_purple",
+                            "data": [
+                                {
+                                    "id": "minecraft:purple_wool",
+                                    "aux": 10,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "蓝色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_blue",
+                            "data": [
+                                {
+                                    "id": "minecraft:blue_wool",
+                                    "aux": 11,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "棕色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_brown",
+                            "data": [
+                                {
+                                    "id": "minecraft:brown_wool",
+                                    "aux": 12,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "绿色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_green",
+                            "data": [
+                                {
+                                    "id": "minecraft:green_wool",
+                                    "aux": 13,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "红色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_red",
+                            "data": [
+                                {
+                                    "id": "minecraft:red_wool",
+                                    "aux": 14,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "黑色羊毛",
+                            "type": "item",
+                            "image": "textures/blocks/wool_colored_black",
+                            "data": [
+                                {
+                                    "id": "minecraft:black_wool",
+                                    "aux": 15,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "木材",
+                    "type": "group",
+                    "image": "textures/blocks/log_spruce",
+                    "data": [
+                        {
+                            "name": "橡木原木",
+                            "type": "item",
+                            "image": "textures/blocks/log_oak",
+                            "data": [
+                                {
+                                    "id": "minecraft:oak_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "金合欢原木",
+                            "type": "item",
+                            "image": "textures/blocks/log_acacia",
+                            "data": [
+                                {
+                                    "id": "minecraft:acacia_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "白桦原木",
+                            "type": "item",
+                            "image": "textures/blocks/log_birch",
+                            "data": [
+                                {
+                                    "id": "minecraft:birch_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "樱花原木",
+                            "type": "item",
+                            "image": "textures/blocks/cherry_log_side",
+                            "data": [
+                                {
+                                    "id": "minecraft:cherry_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "深色橡木",
+                            "type": "item",
+                            "image": "textures/blocks/log_big_oak",
+                            "data": [
+                                {
+                                    "id": "minecraft:dark_oak_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "丛林原木",
+                            "type": "item",
+                            "image": "textures/blocks/log_jungle",
+                            "data": [
+                                {
+                                    "id": "minecraft:jungle_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "红树原木",
+                            "type": "item",
+                            "image": "textures/blocks/mangrove_log_side",
+                            "data": [
+                                {
+                                    "id": "minecraft:mangrove_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "苍白原木",
+                            "type": "item",
+                            "image": "textures/blocks/pale_oak_log_side",
+                            "data": [
+                                {
+                                    "id": "minecraft:pale_oak_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "云杉原木",
+                            "type": "item",
+                            "image": "textures/blocks/log_spruce",
+                            "data": [
+                                {
+                                    "id": "minecraft:spruce_log",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "混凝土",
+                    "type": "group",
+                    "image": "textures/blocks/concrete_white",
+                    "data": [
+                        {
+                            "name": "白色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_white",
+                            "data": [
+                                {
+                                    "id": "minecraft:white_concrete",
+                                    "aux": 0,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "橙色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_orange",
+                            "data": [
+                                {
+                                    "id": "minecraft:orange_concrete",
+                                    "aux": 1,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "品红色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_magenta",
+                            "data": [
+                                {
+                                    "id": "minecraft:magenta_concrete",
+                                    "aux": 2,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "淡蓝色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_light_blue",
+                            "data": [
+                                {
+                                    "id": "minecraft:light_blue_concrete",
+                                    "aux": 3,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "黄色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_yellow",
+                            "data": [
+                                {
+                                    "id": "minecraft:yellow_concrete",
+                                    "aux": 4,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "黄绿色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_lime",
+                            "data": [
+                                {
+                                    "id": "minecraft:lime_concrete",
+                                    "aux": 5,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "粉红色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_pink",
+                            "data": [
+                                {
+                                    "id": "minecraft:pink_concrete",
+                                    "aux": 6,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "灰色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_gray",
+                            "data": [
+                                {
+                                    "id": "minecraft:gray_concrete",
+                                    "aux": 7,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "淡灰色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_silver",
+                            "data": [
+                                {
+                                    "id": "minecraft:light_gray_concrete",
+                                    "aux": 8,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "青色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_cyan",
+                            "data": [
+                                {
+                                    "id": "minecraft:cyan_concrete",
+                                    "aux": 9,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "紫色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_purple",
+                            "data": [
+                                {
+                                    "id": "minecraft:purple_concrete",
+                                    "aux": 10,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "蓝色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_blue",
+                            "data": [
+                                {
+                                    "id": "minecraft:blue_concrete",
+                                    "aux": 11,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "棕色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_brown",
+                            "data": [
+                                {
+                                    "id": "minecraft:brown_concrete",
+                                    "aux": 12,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "绿色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_green",
+                            "data": [
+                                {
+                                    "id": "minecraft:green_concrete",
+                                    "aux": 13,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "红色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_red",
+                            "data": [
+                                {
+                                    "id": "minecraft:red_concrete",
+                                    "aux": 14,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        },
+                        {
+                            "name": "黑色混凝土",
+                            "type": "item",
+                            "image": "textures/blocks/concrete_black",
+                            "data": [
+                                {
+                                    "id": "minecraft:black_concrete",
+                                    "aux": 15,
+                                    "amount": 64,
+                                    "money": 4
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Sell": []
+}
