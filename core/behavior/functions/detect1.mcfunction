@@ -1,0 +1,1 @@
+schedule on_area_loaded add tickingarea alaida2 detect2

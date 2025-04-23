@@ -1,0 +1,1 @@
+schedule on_area_loaded add tickingarea alaida4 mainalaida
