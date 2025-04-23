@@ -1,9 +1,10 @@
 import { ItemStack, Player, system, world } from "@minecraft/server"
 import Dragon from "./dragon";
-import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
+import { ModalFormData } from "@minecraft/server-ui";
 import { DragonID, Dragons, Interact } from "../values/constants"
 import { abilities } from "../values/abilities"
 import { getEl, getName, getType, title } from "../functions/oracle";
+import { DWSUI } from "./ui";
 
 
 /**
@@ -411,17 +412,16 @@ export default class Warrior {
     }
     /**使用手环 */
     useWatch() {
-        let ui = new ActionFormData();
+        let ui = new DWSUI();
         let num = 0;
-        let color = this.base.getDynamicProperty('color') || "w";
-        ui.title(`斗龙手环§${color}`)
+        ui.title(`斗龙手环`)
             .button("召唤/召回", "textures/items/dragon_watch.png")
             .button("使用技能", "textures/particles/firef.png")
             .button("互动", "textures/particles/alla.png")
             .button("传送", "textures/items/tp_card.png")
             .button("斗龙进化", "textures/ui/reguman.v2_1.png")
             .button(`更多`, "textures/ui/alaida.png");
-        let sub = new ActionFormData();
+        let sub = new DWSUI();
         ui.show(this.base).then((res) => {
             //子界面
             if (res.canceled) return;
@@ -465,7 +465,7 @@ export default class Warrior {
                         if (res.canceled) return;
                         if (typeof res.selection != "undefined") {
                             //选择技能
-                            sub = new ActionFormData()
+                            sub = new DWSUI()
                             sub.title(`选择技能§${color}`);
                             let type = current[res.selection];
                             let dragon = new Dragon(world.getEntity(this.dragons[type]), this.name);
@@ -539,7 +539,7 @@ export default class Warrior {
                         title(this.base, '没有可以进化的宝贝龙！');
                         return;
                     }
-                    sub = new ActionFormData();
+                    sub = new DWSUI();
                     sub.title(`选择§${color}`);
                     for (let type of dragons) {
                         sub.button(`${new Dragon(world.getEntity(this.dragons[type]), this.name).stage ? '复原' : '进化'}${getName(type)}`, `textures/ui/${type.split(":")[1]}.${new Dragon(world.getEntity(this.dragons[type]), this.name).stage ? 'v1' : 'v2_1'}.png`);
@@ -567,7 +567,7 @@ export default class Warrior {
                                 switch (arg.selection) {
                                     case 0:
                                         //宝贝龙信息
-                                        sub = new ActionFormData();
+                                        sub = new DWSUI();
                                         sub.title(`信息§${color}`);
                                         for (let type in this.dragons) {
                                             if (world.getEntity(this.dragons[type])) {
@@ -582,7 +582,7 @@ export default class Warrior {
                                         if (!Object.keys(this.dragons).length) { title(this.base, '你没有宝贝龙！'); return; }
                                         sub.show(this.base).then((res)=>{
                                             if (res.canceled) return;
-                                            sub = new ActionFormData();
+                                            sub = new DWSUI();
                                             sub.title(`${getName(Object.keys(this.dragons)[res.selection])}信息§${color}`);
                                             let base = world.getEntity(this.dragons[Object.keys(this.dragons)[res.selection]]);
                                             let state = base ? 1 : 0;
@@ -597,7 +597,7 @@ export default class Warrior {
                                         })
                                         break;
                                     case 1:
-                                        sub = new ActionFormData()
+                                        sub = new DWSUI()
                                         sub.title(`传送点删除§${color}`)
                                             .body("选择：");
                                         //列举坐标点
@@ -612,7 +612,7 @@ export default class Warrior {
                                         sub.show(this.base).then((res) => {
                                             if (res.canceled) return;
                                             if (typeof res.selection != "undefined") {
-                                                let warn = new ActionFormData();
+                                                let warn = new DWSUI();
                                                 warn.title(`警告§${color}`)
                                                     .body(`确定要删除坐标点${this.points[res.selection][0]}吗？`)
                                                     .button('确定')
@@ -627,7 +627,7 @@ export default class Warrior {
                                     case 2:
                                         //快捷方式
                                         let item = new ItemStack('dws:short_cut', 1);
-                                        ui = new ActionFormData();
+                                        ui = new DWSUI();
                                         ui.title(`斗龙手环§${color}`)
                                             .body('选择要创建的快捷方式')
                                             .button("召唤/召回", "textures/items/dragon_watch.png")
@@ -645,7 +645,7 @@ export default class Warrior {
                                                             return;
                                                         }
                                                         let keys = Object.keys(this.dragons);
-                                                        sub = new ActionFormData();
+                                                        sub = new DWSUI();
                                                         sub.title(`选择§${color}`)
                                                         for (let type of keys) {
                                                             sub.button({ rawtext: [{ translate: `entity.${type}.name` }] }, `textures/ui/${type.split(":")[1]}.v1.png`)
@@ -660,7 +660,7 @@ export default class Warrior {
                                                         break;
                                                     case 1:
                                                         //技能
-                                                        sub = new ActionFormData();
+                                                        sub = new DWSUI();
                                                         sub.title(`选择使用技能的宝贝龙§${color}`);
                                                         let current = [];
                                                         for (let type in this.dragons) {
@@ -680,7 +680,7 @@ export default class Warrior {
                                                             if (res.canceled) return;
                                                             if (typeof res.selection != "undefined") {
                                                                 //选择技能
-                                                                sub = new ActionFormData()
+                                                                sub = new DWSUI()
                                                                 sub.title(`选择技能§${color}`);
                                                                 let type = current[res.selection];
                                                                 let dragon = new Dragon(world.getEntity(this.dragons[type]), this.name);
@@ -697,7 +697,7 @@ export default class Warrior {
                                                         break;
                                                     case 2:
                                                         //能量阵
-                                                        sub = new ActionFormData();
+                                                        sub = new DWSUI();
                                                         sub.title(`选择§${color}`);
                                                         let ava = [];
                                                         for (let type in this.dragons) {
@@ -725,7 +725,7 @@ export default class Warrior {
                                                         break;
                                                     case 3:
                                                         //传送
-                                                        sub = new ActionFormData();
+                                                        sub = new DWSUI();
                                                         sub.title(`传送菜单§${color}`)
                                                             .body("选择：");
                                                         //列举坐标点
@@ -753,7 +753,7 @@ export default class Warrior {
                                         break;
                                     case 3:
                                         //配置手环颜色
-                                        let colors = new ActionFormData();
+                                        let colors = new DWSUI();
                                         colors.title(`选择颜色§${color}`)
                                             .button('黄', 'textures/particles/goldf')
                                             .button('绿', 'textures/particles/treef')
