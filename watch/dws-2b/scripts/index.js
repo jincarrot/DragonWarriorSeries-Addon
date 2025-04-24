@@ -4,6 +4,7 @@ import Warrior from "./watch2.1/class/warrior";
 import { DragonID, Dragons } from "./watch2.1/values/constants";
 import { getAbility, getName, getType, title } from "./watch2.1/functions/oracle";
 import Dragon from "./watch2.1/class/dragon";
+import { DWSUI } from "./watch2.1/class/ui";
 
 // dws3-watch
 
@@ -49,8 +50,8 @@ function main() {
                 }
                 return;
             }
-            let alert = new ActionFormData();
-            alert.title(`选择传送点刻录模式§${player.getDynamicProperty('color') || 'w'}`)
+            let alert = new DWSUI();
+            alert.title("选择传送点刻录模式")
                 .body(``)
                 .button(`刻录当前位置`)
                 .button(`刻录玩家位置`);
@@ -84,8 +85,8 @@ function main() {
                         break;
                     case 1:
                         //玩家位置
-                        alert = new ActionFormData();
-                        alert.title(`提示§${player.getDynamicProperty('color') || 'w'}`)
+                        alert = new DWSUI();
+                        alert.title(`提示`)
                             .body('此操作将会记录您的实时位置，当您将该传送卡给予其他玩家时，该玩家将获得传送至您的权力')
                             .button('确定')
                             .button('取消')
@@ -123,8 +124,8 @@ function main() {
             }
         }
         else if (arg.itemStack.typeId == 'dws:nether_star') {
-            let alert = new ActionFormData();
-            alert.title(`提示§${player.getDynamicProperty('color') || 'w'}`)
+            let alert = new DWSUI();
+            alert.title(`提示`)
                 .body('下界之星似乎拥有了一种牵引力量……\n是否跟随这股力量，找寻力量的本源？')
                 .button('确定')
                 .button('取消')
@@ -240,8 +241,8 @@ function main() {
                             }
                         }
                     }
-                    let warn = new ActionFormData()
-                        .title(`§1警告§${player.getDynamicProperty('color') || 'w'}`)
+                    let warn = new DWSUI()
+                        .title("§1警告")
                         .body(`你已经拥有${CN},确定要继续吗？`)
                         .button("确定")
                         .button("取消");
