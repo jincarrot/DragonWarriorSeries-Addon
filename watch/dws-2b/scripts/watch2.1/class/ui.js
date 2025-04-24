@@ -46,7 +46,6 @@ export class DWSUI extends ActionFormData {
         This function can't be called in read-only mode.
      */
     button(text, iconPath = ""){
-        super.button()
         buttons[text] = iconPath;
         return this;
     }
