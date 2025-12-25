@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "ES2015",
+        "moduleResolution": "Bundler",
+        "target": "ES2015",
+        "jsx": "react-jsx",
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strict": true,
+        "sourceMap": true
+    },
+    
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*"
+    ]
+}

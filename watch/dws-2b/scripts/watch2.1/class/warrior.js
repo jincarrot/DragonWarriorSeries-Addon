@@ -1,4 +1,4 @@
-import { ItemStack, Player, system, world } from "@minecraft/server"
+import { DimensionType, DimensionTypes, ItemStack, MinecraftDimensionTypes, Player, system, world } from "@minecraft/server"
 import Dragon from "./dragon";
 import { ModalFormData } from "@minecraft/server-ui";
 import { DragonID, Dragons, Interact } from "../values/constants"

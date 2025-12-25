@@ -1,0 +1,26 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "dws:universe_stone"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "###",
+            "###",
+            "###"
+        ],
+        "key": {
+            "#": {
+                "item": "better_on_bedrock:stardust_ingot"
+            }
+        },
+        "result": [
+            {
+                "item": "dws:universe_stone"
+            }
+        ]
+    }
+}

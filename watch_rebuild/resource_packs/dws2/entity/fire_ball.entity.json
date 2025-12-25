@@ -1,0 +1,26 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:fire_ball",
+			"materials": {
+				"default": "entity_add"
+			},
+			"textures": {
+				"default": "textures/entity/fire_ball"
+			},
+			"geometry": {
+				"default": "geometry.fire_ball"
+			},
+			"animations":{
+				"always":"animation.fire_ball.always"
+			},
+			"scripts":{
+				"animate":[
+					"always"
+				]
+			},
+			"render_controllers": ["controller.render.default"]
+		}
+	}
+}

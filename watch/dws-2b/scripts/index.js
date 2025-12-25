@@ -286,6 +286,7 @@ function main() {
                 player.setDynamicProperty('dragon_data_temp', JSON.stringify(data));
                 title(player, `§4${getName(type)}§r§c力竭！已召唤回手环，再次召唤需要等待等待5分钟`);
                 return;
+                console.log()
             }
         }
     })

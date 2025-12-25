@@ -1,0 +1,32 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.exp.1st": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"4": {
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.25": [1.01, 1.01, 1.01],
+						"0.5": [1.02, 1.02, 1.02],
+						"0.75": [1.01, 1.01, 1.01],
+						"1.0": [1, 1, 1]
+					}
+				},
+				"root": {
+					"rotation": [0, 0, 45],
+					"position": [-11, 29, -10]
+				}
+			}
+		},
+		"animation.exp.3rd": {
+			"loop": true,
+			"bones": {
+				"root": {
+					"position": [2, 20, -6]
+				}
+			}
+		}
+	}
+}

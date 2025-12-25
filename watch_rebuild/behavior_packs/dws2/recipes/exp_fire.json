@@ -1,0 +1,26 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier":"dws:exp_fire"
+        },
+
+
+        "tags": ["crafting_table"],
+        "pattern": [
+            " # ",
+            "# #",
+            " # "
+    ],
+    "key": {
+      "#": {
+            "item": "dws:fire_energy"
+        }
+    },
+    "result": [
+        {
+        "item": "dws:exp"
+    }  
+   ]
+ }
+}
