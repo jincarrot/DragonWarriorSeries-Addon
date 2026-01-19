@@ -1,3 +1,7 @@
+import { AbilityType } from "../enums/ability";
+import { ElementType } from "../enums/attr";
+import { AbilityDefinition } from "../interfaces/ability";
+
 //type:normal(单独伤害),range(范围伤害),pierce(穿透伤害),defend(防御),line(光线)
 export var abilities = [
     {
@@ -146,4 +150,22 @@ export var abilities = [
     }
 ]
 
-export var AbProcess = {};
+function normalAbility(projectileType: string) {
+    return () => {};
+}
+
+export const ABILITIES: Record<number, AbilityDefinition> = {
+    0: {
+        name: "响雷火球",
+        attributes: [ElementType.Fire],
+        types: [AbilityType.Offensive],
+        cost: 30,
+        duration: 150,
+        projectileAttr: {
+            speed: 1
+        },
+        callbacks: {
+            main: normalAbility("dws:fire_ball")
+        }
+    }
+}

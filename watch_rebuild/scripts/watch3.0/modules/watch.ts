@@ -1,5 +1,6 @@
 import { Player, RawText } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
+import { Warrior } from "./warrior";
 
 
 class DWSUI {
@@ -56,11 +57,20 @@ export class Watch {
         this.form.button("召唤/召回");
     }
 
+    getChoiceForm(player: Player) {
+        let form = new DWSUI();
+        form.title("选择");
+        let dragons = (new Warrior(player.id)).dragons;
+        for (let dragon of dragons) form.button(dragon.name);
+        return form;
+    }
+
     /**
      * Switch states of dragons.
      */
-    switchState() {
-        //
+    switchState(selectId: number, player: Player) {
+        let dragons = (new Warrior(player.id)).dragons;
+        let selected = dragons[selectId];
     }
 
     /**
@@ -75,7 +85,10 @@ export class Watch {
             if (arg.canceled) return;
             switch (arg.selection) {
                 case 0:
-                    this.switchState();
+                    this.getChoiceForm(player).show(player).then((arg) => {
+                        if (arg.canceled) return;
+                        this.switchState(arg.selection as number, player);
+                    });
                     break;
                 case 1:
                     break;
