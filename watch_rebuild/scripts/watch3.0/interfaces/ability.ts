@@ -1,5 +1,9 @@
+import { Entity, Vector3 } from "@minecraft/server";
 import { AbilityType } from "../enums/ability";
 import { ElementType } from "../enums/attr";
+import { Ability } from "../modules/ability";
+import { DetectionBox } from "../modules/detection";
+import { Projectile } from "../modules/projectile";
 
 /**
  * Defines behaviors of an ability.
@@ -8,27 +12,27 @@ export interface AbilityCallbacks {
     /**
      * Main function of this ability, executes every 2 ticks if this ability is running.
      */
-    main: Function;
+    main?: (arg: Ability) => void;
     /**
      * Execute when this ability start run.
      */
-    start?: Function;
+    start?: (arg: Ability) => void;
     /**
      * Execute when this ability stopped abnormally.
      */
-    stop?: Function;
+    stop?: (arg: Ability) => void;
     /**
      * Execute when this ability resume.
      */
-    resume?: Function;
+    resume?: (arg: Ability) => void;
     /**
      * Execute when this ability paused.
      */
-    pause?: Function;
+    pause?: (arg: Ability) => void;
     /**
      * Execute when this ability run completely.
      */
-    finish?: Function;
+    finish?: (arg: Ability) => void;
     /**
      * Callbacks of projectiles which spawns from this ability.
      */
@@ -69,7 +73,7 @@ export interface AbilityAttr {
  * Defines an ability.
  */
 export interface AbilityDefinition extends AbilityAttr {
-    projectileAttr: ProjectileAttr;
+    projectileAttr?: ProjectileAttr;
     callbacks: AbilityCallbacks;
 }
 
@@ -87,23 +91,23 @@ export interface DetectionCallbacks{
     /**
      * Main function of this area, executes every 2 ticks if its ability is running.
      */
-    main?: Function;
+    main?: (arg: DetectionBox) => void;
     /**
      * Execute when an entity enter this area.
      */
-    enter?: Function;
+    enter?: (arg0: DetectionBox, arg1: Entity) => void;
     /**
      * Execute when an entity leave this area.
      */
-    leave?: Function;
+    leave?: (arg0: DetectionBox, arg1: Entity) => void;
     /**
      * Execute when this area created.
      */
-    create?: Function;
+    create?: (arg: DetectionBox) => void;
     /**
      * Execute when this area destoried.
      */
-    destory?: Function;
+    destory?: (arg: DetectionBox) => void;
 }
 
 /**
@@ -112,6 +116,7 @@ export interface DetectionCallbacks{
 export interface ProjectileAttr {
     attributes?: ElementType[];
     speed: number;
+    range?: number;
 }
 
 /**
@@ -121,13 +126,21 @@ export interface ProjectileCallbacks{
     /**
      * Main function of this projectile, executes every 2 ticks if this projectile is valid.
      */
-    main?: Function;
+    main?: (arg: Projectile) => void;
     /**
      * Execute when this projectile spawn.
      */
-    spawn?: Function;
+    spawn?: (arg: Projectile) => void;
     /**
      * Execute when this projectile despawn.
      */
-    despawn?: Function;
+    despawn?: (arg: Projectile) => void;
+    /**
+     * Execute when this projectile hit enermy.
+     */
+    hitEntity?: (arg0: Projectile, arg1: Entity) => void;
+    /**
+     * Execute when this projectile hit block.
+     */
+    hitBlock?: (arg0: Projectile, arg1: Vector3) => void;
 }

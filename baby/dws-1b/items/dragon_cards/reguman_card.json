@@ -2,12 +2,12 @@
   "format_version": "1.20.0",
   "minecraft:item": {
     "description": {
-      "identifier": "dws:giardo_spawn_egg",
+      "identifier": "dws:reguman_card",
       "category": "items"
     },
     "components": {
       "minecraft:icon": {
-        "texture": "giardo_spawn_egg"
+        "texture": "reguman_spawn_egg"
       },
       "minecraft:creative_category": {
         "parent": "itemGroup.name.items"

@@ -1,6 +1,8 @@
-import { AbilityType } from "../enums/ability";
+import { AbilityType, TraceModeType } from "../enums/ability";
 import { ElementType } from "../enums/attr";
-import { AbilityDefinition } from "../interfaces/ability";
+import { AbilityCallbacks, AbilityDefinition } from "../interfaces/ability";
+import { Ray } from "../modules/collisions";
+import { getClosestEnermy } from "../utils/game";
 
 //type:normal(单独伤害),range(范围伤害),pierce(穿透伤害),defend(防御),line(光线)
 export var abilities = [
@@ -150,8 +152,67 @@ export var abilities = [
     }
 ]
 
-function normalAbility(projectileType: string) {
-    return () => {};
+interface NormalAbilityParticleSets {
+    initial: string[],
+    runtime: string[],
+    hitBlock: string[],
+    hitEntity: string[]
+}
+
+interface NormalAbilityAttr {
+    projectileType: string,
+    damage: number,
+    /**
+     * Effects of this ability, key is effect name and value is [duration, amplifier].
+     */
+    effects?: Record<string, number[]>,
+    particles?: NormalAbilityParticleSets,
+    trace?: boolean
+}
+
+function normalAbilityCallback(attr: NormalAbilityAttr): AbilityCallbacks {
+    return {
+        start: (ability) => {
+            ability.spawnProjectile(attr.projectileType, ability.user.base.location, attr.trace ? TraceModeType.Trace : TraceModeType.Simple);
+            if (attr.particles?.initial) {
+                let loc = ability.user.base.location;
+                for (let particleName of attr.particles.initial)
+                    ability.user.base.dimension.spawnParticle(particleName, loc);
+            }
+        },
+        projectileCallbacks: {
+            hitEntity: (projectile, target) => {
+                target.applyDamage(attr.damage);
+                if (attr.effects) for (let effectName in attr.effects) {
+                    if (effectName == "fire") {
+                        target.setOnFire(attr.effects[effectName][0]);
+                        continue;
+                    }
+                    target.addEffect(effectName, attr.effects[effectName][0], { amplifier: attr.effects[effectName][1] });
+                }
+                if (attr.particles?.hitEntity) {
+                    let loc = projectile.base.location;
+                    for (let particleName of attr.particles.hitEntity)
+                        projectile.base.dimension.spawnParticle(particleName, loc);
+                }
+            },
+            hitBlock: (projectile, location) => {
+                if (attr.particles?.hitBlock) {
+                    let loc = location;
+                    for (let particleName of attr.particles.hitBlock)
+                        projectile.base.dimension.spawnParticle(particleName, loc);
+                }
+                projectile.base.dimension.createExplosion(location, attr.damage / 5);
+            },
+            main: (projectile) => {
+                if (attr.particles?.runtime) {
+                    let loc = projectile.base.location;
+                    for (let particleName of attr.particles.runtime)
+                        projectile.base.dimension.spawnParticle(particleName, loc);
+                }
+            }
+        }
+    }
 }
 
 export const ABILITIES: Record<number, AbilityDefinition> = {
@@ -162,10 +223,37 @@ export const ABILITIES: Record<number, AbilityDefinition> = {
         cost: 30,
         duration: 150,
         projectileAttr: {
-            speed: 1
+            speed: 1,
+            range: 2
         },
+        callbacks: normalAbilityCallback({
+            projectileType: "dws:fire_ball",
+            damage: 11
+        })
+    },
+    1: {
+        name: "奇异光线",
+        attributes: [ElementType.Wood],
+        types: [AbilityType.Offensive],
+        cost: 30,
+        duration: 150,
         callbacks: {
-            main: normalAbility("dws:fire_ball")
+            start: (ability) => {
+                let target = getClosestEnermy(ability.user.base);
+                let dir = {
+                    x: target.location.x - ability.user.base.location.x,
+                    y: target.location.y - ability.user.base.location.y,
+                    z: target.location.z - ability.user.base.location.z
+                }
+                let collision = new Ray(ability.user.base.location, dir, 10, ability.user.base.dimension);
+                ability.createDetection(collision);
+            },
+            detectingCallbacks: {
+                main: (box) => {
+                    for (let entity of box.entities) 
+                        entity.applyDamage(5);
+                }
+            }
         }
     }
 }

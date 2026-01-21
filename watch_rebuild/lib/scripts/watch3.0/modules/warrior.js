@@ -1,19 +1,22 @@
 import { world } from "@minecraft/server";
 import { Dragon } from "./dragon";
 import { dragonData } from "../config/dragons";
+import { DragonIdentifierError } from "../errors/dragonError";
+import { DragonExistError } from "../errors/warriorError";
+import { Watch } from "./watch";
 const defaultData = {
     dragons: {}
 };
 /**
- * Contains a lot of operations of player.
+ * Represents the state of a warrior (player).
  */
-export default class Warrior {
+export class Warrior {
     constructor(playerId) {
-        this.playerId = playerId;
         this.base = world.getEntity(playerId);
+        this.watch = new Watch(this.base);
     }
     /**
-     * player's data
+     * Player's data.
      */
     get data() {
         var _a;
@@ -28,44 +31,69 @@ export default class Warrior {
         (_a = this.base) === null || _a === void 0 ? void 0 : _a.setDynamicProperty("dws", data);
     }
     /**
-     * Dragons this player has.
+     * Dragons this player had.
      */
     get dragons() {
         let dragonsData = this.data.dragons;
         let dragonList = [];
         for (let dragonType in dragonsData)
-            dragonList.push(new Dragon(this.playerId, dragonType));
+            dragonList.push(new Dragon(this.base.id, dragonType));
         return dragonList;
     }
     /**
-     * Add a dragon to player.
-     * @returns True if this dragon had been added success.
+     * Add a dragon which is currently exists in the world to the player.
      */
     addDragon(entityId, forceAdd = false) {
-        var _a;
         let entity = world.getEntity(entityId);
-        if (!entity)
+        if (!entity || !(entity === null || entity === void 0 ? void 0 : entity.isValid))
             return;
-        if (entity.typeId in this.data.dragons && !forceAdd) {
-            console.log(`[error] Player ${(_a = this.base) === null || _a === void 0 ? void 0 : _a.nameTag} already has a dragon ${entity.typeId}!`);
-            return false;
-        }
-        if (!(entity.typeId in dragonData)) {
-            console.log(`[error] entity ${entity.typeId} is not a dragon.`);
-            return false;
-        }
+        if (entity.typeId in this.data.dragons && !forceAdd)
+            throw new DragonExistError(this.base.name, entity.typeId);
+        if (!(entity.typeId in dragonData))
+            throw new DragonIdentifierError(entity.typeId);
         let defaultAttr = {
             entityId: entity.id,
             exp: 0,
             energy: 0,
             ownerId: this.base.id
         };
-        // data that need to store.
         let data = Object.assign(defaultAttr, dragonData[entity.typeId]);
         let warriorData = this.data;
         warriorData.dragons[entity.typeId] = data;
         this.data = warriorData;
-        return true;
+    }
+    /**
+     * Spawn and add a dragon to the player.
+     * @param typeId Type of target dragon.
+     * @param forceAdd Force to add or not.
+     */
+    addDragonByType(typeId, forceAdd = false) {
+        var _a;
+        if (!(typeId in dragonData))
+            throw new DragonIdentifierError(typeId);
+        if (typeId in this.data.dragons && !forceAdd)
+            throw new DragonExistError(this.base.name, typeId);
+        let entity = this.base.dimension.spawnEntity(typeId, this.base.location);
+        (_a = entity.getComponent("minecraft:tameable")) === null || _a === void 0 ? void 0 : _a.tame(this.base);
+        entity.triggerEvent("minecraft:on_tame");
+        entity.addTag(`owner#${this.base.id}`);
+        this.addDragon(entity.id, forceAdd);
+    }
+    hasDragon(dragonType) {
+        return dragonType in this.data.dragons;
+    }
+    getDragon(dragonType) {
+        for (let dragon of this.dragons) {
+            if (dragon.typeId == dragonType)
+                return this.dragons;
+        }
+    }
+    removeDragon(dragonType) {
+        if (this.hasDragon(dragonType)) {
+            let data = this.data;
+            delete data.dragons[dragonType];
+            this.data = data;
+        }
     }
 }
 //# sourceMappingURL=warrior.js.map

@@ -1,8 +1,9 @@
-import { EntityVariantComponent, Player, world } from "@minecraft/server"
+import { Entity, EntityVariantComponent, Player, world } from "@minecraft/server"
 import { dragonData } from "../config/dragons";
 import { DragonData } from "../interfaces/dragon";
+import { abilityManager } from "../managers/abilityManager";
 
-export class Dragon{
+export class Dragon {
     /**
      * rules to cauculate level and energy.
      */
@@ -22,7 +23,7 @@ export class Dragon{
         this.typeId = typeId;
         this.rules = dragonData[this.typeId]['rules'];
     }
-    
+
     get data(): DragonData {
         let data = JSON.parse(this.owner.getDynamicProperty("dws") as string) as any;
         return data['dragons'][this.typeId];
@@ -91,6 +92,12 @@ export class Dragon{
             this.abilities = abilities
         }
     }
+    useAbility(abilityId: number) {
+        if (this.hasAbility(abilityId)) {
+            let ability = abilityManager.createAbility(this, abilityId);
+            return ability;
+        }
+    }
 
     /**
      * current energy of this dragon.
@@ -104,7 +111,7 @@ export class Dragon{
     addEnergy(value: number) {
         let current = this.energy + value;
         let remain = 0;
-        if (current > this.maxEnergy){
+        if (current > this.maxEnergy) {
             remain = current - this.maxEnergy;
             current = this.maxEnergy;
         }
@@ -114,7 +121,7 @@ export class Dragon{
     reduceEnergy(value: number) {
         let current = this.energy - value;
         let remain = 0;
-        if (current < 0){
+        if (current < 0) {
             remain = -current;
             current = 0;
         }
@@ -203,7 +210,7 @@ export class Dragon{
     /**
      * current level of this dragon.
      */
-    get level(){
+    get level() {
         let levelRule = this.rules[0];
         return levelRule(this.exp);
     }
@@ -217,7 +224,7 @@ export class Dragon{
     /**
      * Returns true if this dragon exist in the world.
      */
-    get isExist(){
+    get isExist() {
         let entity = world.getEntity(this.entityId);
         return entity && entity.isValid ? true : false;
     }
@@ -226,19 +233,42 @@ export class Dragon{
      * Switch the in / out state of this dragon.
      * @returns True if this dragon is out now else false.
      */
-    switchState(): boolean{
+    switchState(): boolean {
         if (this.isExist) {
             // call in
+            this.base?.teleport({ x: this.base.location.x, y: this.base.location.y + 10, z: this.base.location.z });
+            let loc = this.base?.location;
+            this.base?.runCommand(`structure save "${this.owner.name}_${this.typeId}" ${loc?.x} ${loc?.y} ${loc?.z} ${loc?.x} ${loc?.y} ${loc?.z} true disk`);
+            this.base?.remove();
             return false;
         }
         // call out
+        let loc = this.owner.location;
+        this.owner.runCommand(`structure load "${this.owner.name}_${this.typeId}" ${loc.x} ${loc.y + 1} ${loc.z}`);
+        let dragons = this.owner.dimension.getEntities({type: this.typeId});
+        dragons.forEach((dragon) => {
+            for (let tag of dragon.getTags()) {
+                if (tag.indexOf("owner#") >= 0) {
+                    if (tag.replace("owner#", "") == this.ownerId) this.entityId = dragon.id;
+                    break;
+                }
+            }
+        })
         return true;
     }
 
     /**
      * Evolve this dragon.
      */
-    evolve(forceEvolve=false) {
+    evolve(forceEvolve = false) {
         //
     }
+
+    getInfo() {
+        return `等级：${this.level} / ${this.maxLevel} \n`;
+    }
+}
+
+export class LivingDragon extends Dragon {
+    get base() { return world.getEntity(this.entityId) as Entity; }
 }

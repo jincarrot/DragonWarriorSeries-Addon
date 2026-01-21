@@ -1,6 +1,7 @@
 import { Player, RawText } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 import { Warrior } from "./warrior";
+import { manager } from "../managers/manager";
 
 
 class DWSUI {
@@ -31,9 +32,9 @@ class DWSUI {
 
     show(player: Player) {
         //set color
-        let color = '§' + player.getDynamicProperty('color') || "w";
+        let color = '§' + (player.getDynamicProperty('color') || "w");
         let titleText = this.titleText;
-        if (typeof this.titleText == 'undefined') titleText = '';
+        if (typeof this.titleText == undefined) titleText = '';
         if (typeof titleText == 'string') titleText += color;
         else {
             if (titleText.rawtext) titleText.rawtext.push({ 'text': color });
@@ -50,17 +51,22 @@ class DWSUI {
 
 export class Watch {
     form: DWSUI;
+    player: Player;
 
-    constructor() {
+    constructor(player: Player) {
+        this.player = player;
         this.form = new DWSUI();
         this.form.title("斗龙手环");
         this.form.button("召唤/召回");
     }
 
-    getChoiceForm(player: Player) {
+    /**
+     * Chioce form.
+     */
+    private get choiceForm() {
         let form = new DWSUI();
         form.title("选择");
-        let dragons = (new Warrior(player.id)).dragons;
+        let dragons = manager.warrior.getWarrior(this.player.id).dragons;
         for (let dragon of dragons) form.button(dragon.name);
         return form;
     }
@@ -68,26 +74,29 @@ export class Watch {
     /**
      * Switch states of dragons.
      */
-    switchState(selectId: number, player: Player) {
-        let dragons = (new Warrior(player.id)).dragons;
+    switchState(selectId: number) {
+        let warrior = manager.warrior.getWarrior(this.player.id);
+        let dragons = warrior.dragons;
         let selected = dragons[selectId];
+        selected.switchState();
     }
 
     /**
      * show infos of dragons. 
      */
     showInfo() {
+        let warrior = manager.warrior.getWarrior(this.player.id);
         //
     }
 
-    showForm(player: Player) {
-        this.form.show(player).then((arg) => {
+    show() {
+        this.form.show(this.player).then((arg) => {
             if (arg.canceled) return;
             switch (arg.selection) {
                 case 0:
-                    this.getChoiceForm(player).show(player).then((arg) => {
+                    this.choiceForm.show(this.player).then((arg) => {
                         if (arg.canceled) return;
-                        this.switchState(arg.selection as number, player);
+                        this.switchState(arg.selection as number);
                     });
                     break;
                 case 1:

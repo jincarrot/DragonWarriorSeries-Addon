@@ -1,9 +1,28 @@
 import { world } from "@minecraft/server"
-import { Dragon } from "./watch3.0/modules/dragon"
+import { manager } from "./watch3.0/managers/manager";
+import { isDragon } from "./watch3.0/utils/game";
 
 let aEvents = world.afterEvents;
 
-aEvents.entityHitEntity.subscribe((arg) => {
-    world.sendMessage(arg.damagingEntity.typeId);
-    let temp = new Dragon(arg.damagingEntity.id, "dws:reguman");
+aEvents.itemUse.subscribe((arg) => {
+    if (arg.itemStack.typeId.indexOf("dws:") < 0) return;
+    let warrior = manager.warrior.getWarrior(arg.source.id);
+
+    // Show menu when use dragon watch.
+    if (arg.itemStack.typeId == 'dws:dragon_watch') {
+        warrior.watch.show();
+    }
+
+    // Dragon card.
+    if (arg.itemStack.typeId.indexOf("_card") >= 0) {
+        let dragonType = arg.itemStack.typeId.replace("_card", "");
+        if (isDragon(dragonType)) {
+            if (!warrior.hasDragon(dragonType)) {
+                warrior.addDragonByType(dragonType);
+                if (warrior.dragons.length == 1) {
+                    warrior.base.runCommand("give @s dws:dragon_watch");
+                }
+            }
+        }
+    }
 })

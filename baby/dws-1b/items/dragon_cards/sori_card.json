@@ -2,12 +2,12 @@
   "format_version": "1.20.0",
   "minecraft:item": {
     "description": {
-      "identifier": "dws:gabina_spawn_egg",
+      "identifier": "dws:sori_card",
       "category": "items"
     },
     "components": {
       "minecraft:icon": {
-        "texture": "gabina_spawn_egg"
+        "texture": "sori_spawn_egg"
       },
       "minecraft:creative_category": {
         "parent": "itemGroup.name.items"

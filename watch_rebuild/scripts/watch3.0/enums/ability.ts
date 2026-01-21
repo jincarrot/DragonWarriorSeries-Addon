@@ -21,3 +21,10 @@ export enum TraceModeType {
     Trace = "trace",
     Simple = "simple"
 }
+
+export enum AbilityStateType {
+    Running = "running",
+    Pause = "pause",
+    Finished = "finished",
+    Stopped = "stopped"
+}

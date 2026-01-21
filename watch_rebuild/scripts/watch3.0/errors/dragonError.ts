@@ -6,3 +6,10 @@ export class DragonIdentifierError extends Error {
         this.name = "DragonIdentfierError";
     }
 }
+export class DragonInValidError extends Error {
+    constructor(identifier: string) {
+        let message = `EntityId "${identifier}" is not valid in the world.`
+        super(message);
+        this.name = "DragonInVaildError";
+    }
+}

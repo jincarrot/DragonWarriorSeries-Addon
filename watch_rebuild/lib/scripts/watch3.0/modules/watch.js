@@ -1,4 +1,5 @@
 import { ActionFormData } from "@minecraft/server-ui";
+import { manager } from "../managers/manager";
 class DWSUI {
     constructor() {
         this.titleText = "";
@@ -19,9 +20,9 @@ class DWSUI {
     }
     show(player) {
         //set color
-        let color = '§' + player.getDynamicProperty('color') || "w";
+        let color = '§' + (player.getDynamicProperty('color') || "w");
         let titleText = this.titleText;
-        if (typeof this.titleText == 'undefined')
+        if (typeof this.titleText == undefined)
             titleText = '';
         if (typeof titleText == 'string')
             titleText += color;
@@ -41,30 +42,50 @@ class DWSUI {
     }
 }
 export class Watch {
-    constructor() {
+    constructor(player) {
+        this.player = player;
         this.form = new DWSUI();
         this.form.title("斗龙手环");
         this.form.button("召唤/召回");
     }
     /**
+     * Chioce form.
+     */
+    get choiceForm() {
+        let form = new DWSUI();
+        form.title("选择");
+        let dragons = manager.warrior.getWarrior(this.player.id).dragons;
+        for (let dragon of dragons)
+            form.button(dragon.name);
+        return form;
+    }
+    /**
      * Switch states of dragons.
      */
-    switchState() {
-        //
+    switchState(selectId) {
+        let warrior = manager.warrior.getWarrior(this.player.id);
+        let dragons = warrior.dragons;
+        let selected = dragons[selectId];
+        selected.switchState();
     }
     /**
      * show infos of dragons.
      */
     showInfo() {
+        let warrior = manager.warrior.getWarrior(this.player.id);
         //
     }
-    showForm(player) {
-        this.form.show(player).then((arg) => {
+    show() {
+        this.form.show(this.player).then((arg) => {
             if (arg.canceled)
                 return;
             switch (arg.selection) {
                 case 0:
-                    this.switchState();
+                    this.choiceForm.show(this.player).then((arg) => {
+                        if (arg.canceled)
+                            return;
+                        this.switchState(arg.selection);
+                    });
                     break;
                 case 1:
                     break;

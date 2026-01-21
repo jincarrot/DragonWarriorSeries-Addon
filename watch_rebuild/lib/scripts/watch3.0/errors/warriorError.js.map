@@ -1,0 +1,1 @@
+{"version":3,"file":"warriorError.js","sourceRoot":"","sources":["../../../../scripts/watch3.0/errors/warriorError.ts"],"names":[],"mappings":"AACA,MAAM,OAAO,gBAAiB,SAAQ,KAAK;IACvC,YAAY,UAAkB,EAAE,UAAkB;QAC9C,IAAI,OAAO,GAAG,WAAW,UAAU,2BAA2B,UAAU,IAAI,CAAA;QAC5E,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAG,kBAAkB,CAAC;IACnC,CAAC;CACJ"}

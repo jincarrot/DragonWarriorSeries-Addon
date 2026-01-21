@@ -2,12 +2,12 @@
   "format_version": "1.20.0",
   "minecraft:item": {
     "description": {
-      "identifier": "dws:kavili_spawn_egg",
+      "identifier": "dws:giardo_card",
       "category": "items"
     },
     "components": {
       "minecraft:icon": {
-        "texture": "kavili_spawn_egg"
+        "texture": "giardo_spawn_egg"
       },
       "minecraft:creative_category": {
         "parent": "itemGroup.name.items"
