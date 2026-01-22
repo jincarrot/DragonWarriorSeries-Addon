@@ -12,4 +12,11 @@ export class DragonInValidError extends Error {
         this.name = "DragonInVaildError";
     }
 }
+export class DragonCallOutCoolDownError extends Error {
+    constructor(identifier) {
+        let message = `Dragon "${identifier}" cannot release now.`;
+        super(message);
+        this.name = "DragonCallOutCoolDownError";
+    }
+}
 //# sourceMappingURL=dragonError.js.map

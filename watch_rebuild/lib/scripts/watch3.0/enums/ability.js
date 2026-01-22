@@ -28,4 +28,9 @@ export var AbilityStateType;
     AbilityStateType["Finished"] = "finished";
     AbilityStateType["Stopped"] = "stopped";
 })(AbilityStateType || (AbilityStateType = {}));
+export var AbilityUseConditionType;
+(function (AbilityUseConditionType) {
+    AbilityUseConditionType[AbilityUseConditionType["NeedEnermy"] = 1] = "NeedEnermy";
+    AbilityUseConditionType[AbilityUseConditionType["NeedEnergy"] = 2] = "NeedEnergy";
+})(AbilityUseConditionType || (AbilityUseConditionType = {}));
 //# sourceMappingURL=ability.js.map

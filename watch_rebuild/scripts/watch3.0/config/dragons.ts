@@ -12,6 +12,6 @@ export let dragonData: Record<string, any> = {
     name: "雷古曼",
     rules: [defaultLevelRule, defaultEnergyRule],
     attributes: ["fire"],
-    abilities: [],
+    abilities: [0],
   },
 };

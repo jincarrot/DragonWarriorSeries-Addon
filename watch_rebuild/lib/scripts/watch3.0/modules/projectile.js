@@ -21,6 +21,8 @@ export class Projectile {
         if (!this.base || !this.base.isValid)
             return;
         let enermy = getClosestEnermy(this.base);
+        if (!enermy)
+            return;
         if (dist(enermy.location, this.base.location) <= this.attr.range) {
             if (this.callbacks.hitEntity)
                 this.callbacks.hitEntity(this, enermy);
@@ -42,8 +44,9 @@ Projectile._id = 0;
 export class SimpleProjectile extends Projectile {
     constructor(entity, attr, direction, callbacks) {
         super(entity, attr, callbacks);
+        let target = getClosestEnermy(entity);
         if (!direction) {
-            let targetLoc = getClosestEnermy(entity).location;
+            let targetLoc = target.location;
             let ori = entity.location;
             direction = { x: targetLoc.x - ori.x, y: targetLoc.y - ori.y, z: targetLoc.z - ori.z };
         }

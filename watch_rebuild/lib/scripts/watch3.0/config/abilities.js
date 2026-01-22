@@ -1,6 +1,8 @@
 import { AbilityType, TraceModeType } from "../enums/ability";
 import { ElementType } from "../enums/attr";
+import { manager } from "../managers/manager";
 import { Ray } from "../modules/collisions";
+import { alert } from "../utils/debug";
 import { getClosestEnermy } from "../utils/game";
 //type:normal(单独伤害),range(范围伤害),pierce(穿透伤害),defend(防御),line(光线)
 export var abilities = [
@@ -163,11 +165,13 @@ function normalAbilityCallback(attr) {
         projectileCallbacks: {
             hitEntity: (projectile, target) => {
                 var _a;
-                target.applyDamage(attr.damage);
+                let ability = manager.ability.getFromProjectile(projectile.base);
+                target.applyDamage(attr.damage * (1 + ((ability === null || ability === void 0 ? void 0 : ability.user.level) || 1) / 10.0));
+                alert(`${ability === null || ability === void 0 ? void 0 : ability.user.level}`);
                 if (attr.effects)
                     for (let effectName in attr.effects) {
                         if (effectName == "fire") {
-                            target.setOnFire(attr.effects[effectName][0]);
+                            target.setOnFire(attr.effects[effectName][0] * (1 + ((ability === null || ability === void 0 ? void 0 : ability.user.level) || 1) / 10.0));
                             continue;
                         }
                         target.addEffect(effectName, attr.effects[effectName][0], { amplifier: attr.effects[effectName][1] });
@@ -211,7 +215,10 @@ export const ABILITIES = {
         },
         callbacks: normalAbilityCallback({
             projectileType: "dws:fire_ball",
-            damage: 11
+            damage: 11,
+            effects: {
+                "fire": [5, 0]
+            }
         })
     },
     1: {
@@ -223,6 +230,8 @@ export const ABILITIES = {
         callbacks: {
             start: (ability) => {
                 let target = getClosestEnermy(ability.user.base);
+                if (!target)
+                    return;
                 let dir = {
                     x: target.location.x - ability.user.base.location.x,
                     y: target.location.y - ability.user.base.location.y,

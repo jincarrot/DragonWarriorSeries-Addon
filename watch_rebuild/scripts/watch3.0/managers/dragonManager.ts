@@ -1,7 +1,22 @@
+import { world } from "@minecraft/server";
+import { alert } from "../utils/debug";
+import { warriorManager } from "./warriorManager";
+import { Dragon } from "../modules/dragon";
 
-class DragonManager{
+export class DragonManager{
+
     constructor() {
-        //
+        world.afterEvents.entityDie.subscribe((arg) => {
+            let entityId = arg.deadEntity.id;
+            let typeId = arg.deadEntity.typeId;
+            warriorManager.getAllWarriors().forEach((warrior) => {
+                if(warrior.getDragon(typeId)?.entityId == entityId) {
+                    let deadDragon = warrior.getDragon(typeId) as Dragon;
+                    deadDragon.callOutCoolDown = 6000;
+                    return;
+                }
+            })
+        })
     }
 }
 

@@ -14,7 +14,11 @@ export enum AbilityType {
     /**
      * Ability that will heal its user.
      */
-    Therapeutic = "therapeutic"
+    Therapeutic = "therapeutic",
+    /**
+     * Ability that will give debuffs to enermy.
+     */
+    Debuff = "debuff"
 }
 
 export enum TraceModeType {
@@ -27,4 +31,9 @@ export enum AbilityStateType {
     Pause = "pause",
     Finished = "finished",
     Stopped = "stopped"
+}
+
+export enum AbilityUseConditionType {
+    NeedEnermy = 1,
+    NeedEnergy = 2,
 }

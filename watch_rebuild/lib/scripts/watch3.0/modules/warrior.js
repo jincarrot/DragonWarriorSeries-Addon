@@ -4,6 +4,8 @@ import { dragonData } from "../config/dragons";
 import { DragonIdentifierError } from "../errors/dragonError";
 import { DragonExistError } from "../errors/warriorError";
 import { Watch } from "./watch";
+import { ModalFormData } from "@minecraft/server-ui";
+import { Backpack } from "./extra";
 const defaultData = {
     dragons: {}
 };
@@ -12,8 +14,13 @@ const defaultData = {
  */
 export class Warrior {
     constructor(playerId) {
+        var _a;
         this.base = world.getEntity(playerId);
         this.watch = new Watch(this.base);
+        this.dragonMap = {};
+        for (let dragonType in this.data.dragons)
+            this.dragonMap[dragonType] = new Dragon(this.base.id, dragonType);
+        this.backpack = new Backpack((_a = this.base.getComponent("minecraft:inventory")) === null || _a === void 0 ? void 0 : _a.container);
     }
     /**
      * Player's data.
@@ -36,14 +43,18 @@ export class Warrior {
     get dragons() {
         let dragonsData = this.data.dragons;
         let dragonList = [];
-        for (let dragonType in dragonsData)
-            dragonList.push(new Dragon(this.base.id, dragonType));
+        for (let dragonType in dragonsData) {
+            if (!(dragonType in this.dragonMap))
+                this.dragonMap[dragonType] = new Dragon(this.base.id, dragonType);
+            dragonList.push(this.dragonMap[dragonType]);
+        }
         return dragonList;
     }
     /**
      * Add a dragon which is currently exists in the world to the player.
      */
     addDragon(entityId, forceAdd = false) {
+        var _a;
         let entity = world.getEntity(entityId);
         if (!entity || !(entity === null || entity === void 0 ? void 0 : entity.isValid))
             return;
@@ -55,12 +66,20 @@ export class Warrior {
             entityId: entity.id,
             exp: 0,
             energy: 0,
-            ownerId: this.base.id
+            ownerId: this.base.id,
+            extra: {
+                health: 0,
+                maxHealth: 20,
+                healthRegenerationRate: 1,
+                energyRegenerationRate: 1,
+                callOutCoolDown: 0
+            }
         };
         let data = Object.assign(defaultAttr, dragonData[entity.typeId]);
         let warriorData = this.data;
         warriorData.dragons[entity.typeId] = data;
         this.data = warriorData;
+        (_a = this.getDragon(entity.typeId)) === null || _a === void 0 ? void 0 : _a.saveToStructure();
     }
     /**
      * Spawn and add a dragon to the player.
@@ -85,7 +104,7 @@ export class Warrior {
     getDragon(dragonType) {
         for (let dragon of this.dragons) {
             if (dragon.typeId == dragonType)
-                return this.dragons;
+                return dragon;
         }
     }
     removeDragon(dragonType) {
@@ -94,6 +113,26 @@ export class Warrior {
             delete data.dragons[dragonType];
             this.data = data;
         }
+    }
+    showExpForm() {
+        let dragonNames = [];
+        this.dragons.forEach((dragon) => dragonNames.push(dragon.name));
+        let expAmount = this.backpack.getItemTotalAmount("dws:exp");
+        let form = new ModalFormData();
+        form.title("使用经验点");
+        form.dropdown("使用于", dragonNames);
+        form.slider("使用数量", 1, expAmount);
+        form.show(this.base).then((arg) => {
+            if (arg.canceled)
+                return;
+            if (arg.formValues) {
+                // FormValue, 0 is dragon and 1 is amount.
+                let selected = this.dragons[arg.formValues[0]];
+                let amount = arg.formValues[1];
+                let remain = selected.addExp(amount * 10) / 10;
+                this.backpack.clearItem("dws:exp", remain);
+            }
+        });
     }
 }
 //# sourceMappingURL=warrior.js.map

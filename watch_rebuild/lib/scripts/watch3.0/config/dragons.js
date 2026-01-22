@@ -10,7 +10,7 @@ export let dragonData = {
         name: "雷古曼",
         rules: [defaultLevelRule, defaultEnergyRule],
         attributes: ["fire"],
-        abilities: [],
+        abilities: [0],
     },
 };
 //# sourceMappingURL=dragons.js.map

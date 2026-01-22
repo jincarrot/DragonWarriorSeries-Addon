@@ -70,7 +70,7 @@ export class Ability {
         this.ticks = 0;
         this._state = AbilityStateType.Running;
         if (this.callbacks.start) this.callbacks.start(this);
-        this.runtimeId = system.runInterval(this.main, 2);
+        this.runtimeId = system.runInterval(() => this.main(), 2);
         if (!this.projectileAttr.attributes) this.projectileAttr.attributes = this.attr.attributes;
     }
 
@@ -90,7 +90,7 @@ export class Ability {
     resume() {
         if (this._state != AbilityStateType.Pause) throw new AbilityProgressError(this._state, AbilityStateType.Running);
         this._state = AbilityStateType.Running;
-        this.runtimeId = system.runInterval(this.main, 2);
+        this.runtimeId = system.runInterval(() => this.main(), 2);
         this.callbacks.resume ? this.callbacks.resume(this) : null;
     }
 

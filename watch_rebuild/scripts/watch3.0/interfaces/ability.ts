@@ -1,9 +1,10 @@
 import { Entity, Vector3 } from "@minecraft/server";
-import { AbilityType } from "../enums/ability";
+import { AbilityType, AbilityUseConditionType } from "../enums/ability";
 import { ElementType } from "../enums/attr";
 import { Ability } from "../modules/ability";
 import { DetectionBox } from "../modules/detection";
 import { Projectile } from "../modules/projectile";
+import { Dragon } from "../modules/dragon";
 
 /**
  * Defines behaviors of an ability.
@@ -75,6 +76,7 @@ export interface AbilityAttr {
 export interface AbilityDefinition extends AbilityAttr {
     projectileAttr?: ProjectileAttr;
     callbacks: AbilityCallbacks;
+    useCondition?: AbilityUseConditionType[] | ((arg: Dragon) => boolean);
 }
 
 /**

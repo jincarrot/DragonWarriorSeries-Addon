@@ -2,12 +2,14 @@ import { Player, RawText } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 import { Warrior } from "./warrior";
 import { manager } from "../managers/manager";
+import { isAbility } from "../utils/game";
+import { ABILITIES } from "../config/abilities";
 
 
 class DWSUI {
-    titleText: string | RawText;
-    bodyText: string | RawText;
-    buttons: Record<string, any>;
+    private titleText: string | RawText;
+    private bodyText: string | RawText;
+    private buttons: Record<string, any>;
 
     constructor() {
         this.titleText = "";
@@ -47,6 +49,7 @@ class DWSUI {
         for (let buttonId in this.buttons) ui.button(buttonId, this.buttons[buttonId]);
         return ui.show(player as any);
     }
+
 }
 
 export class Watch {
@@ -58,16 +61,45 @@ export class Watch {
         this.form = new DWSUI();
         this.form.title("斗龙手环");
         this.form.button("召唤/召回");
+        this.form.button("使用技能");
+        this.form.button("查看信息");
+        this.form.button("设置");
     }
 
     /**
      * Chioce form.
      */
-    private get choiceForm() {
+    private choiceForm(showAll = true) {
         let form = new DWSUI();
         form.title("选择");
         let dragons = manager.warrior.getWarrior(this.player.id).dragons;
-        for (let dragon of dragons) form.button(dragon.name);
+        for (let dragon of dragons) if (showAll || dragon.isExist) form.button(dragon.name, `textures/ui/${dragon.typeId.replace("dws:", "")}.v1`);
+        return form;
+    }
+
+    private get colorForm() {
+        let form = new DWSUI();
+        form.title("选择颜色");
+        let btns = [["金", "gold"], ["木", "tree"], ["水", "water"], ["火", "fire"], ["土", "earth"], ["光", "light"]];
+        for (let btn of btns) form.button(btn[0], `textures/ui/${btn[1]}logo`);
+        return form;
+    }
+
+    private get settingForm() {
+        let form = new DWSUI();
+        form.title("选择");
+        form.button("界面颜色");
+        return form;
+    }
+
+    private abilityForm(selectId: number) {
+        let warrior = manager.warrior.getWarrior(this.player.id);
+        let dragons = warrior.dragons;
+        let selected = dragons[selectId];
+        let form = new DWSUI();
+        form.title("选择技能");
+        for (let abilityId of selected.abilities)
+            if (isAbility(abilityId)) form.button(ABILITIES[abilityId].name)
         return form;
     }
 
@@ -79,6 +111,14 @@ export class Watch {
         let dragons = warrior.dragons;
         let selected = dragons[selectId];
         selected.switchState();
+    }
+
+    useAbility(dragonId: number, abilityId: number) {
+        let warrior = manager.warrior.getWarrior(this.player.id);
+        let dragons = warrior.dragons;
+        let selected = dragons[dragonId];
+        let abilities = selected.abilities;
+        selected.useAbility(abilities[abilityId]);
     }
 
     /**
@@ -94,12 +134,47 @@ export class Watch {
             if (arg.canceled) return;
             switch (arg.selection) {
                 case 0:
-                    this.choiceForm.show(this.player).then((arg) => {
+                    this.choiceForm().show(this.player).then((arg) => {
                         if (arg.canceled) return;
                         this.switchState(arg.selection as number);
                     });
                     break;
                 case 1:
+                    this.choiceForm(false).show(this.player).then((arg) => {
+                        if (arg.canceled) return;
+                        let dragonId = arg.selection;
+                        this.abilityForm(arg.selection as number).show(this.player).then((arg) => {
+                            if (arg.canceled) return;
+                            this.useAbility(dragonId as number, arg.selection as number);
+                        })
+                    })
+                    break;
+                case 2:
+                    this.choiceForm().show(this.player).then((arg) => {
+                        if (arg.canceled) return;
+                        let warrior = manager.warrior.getWarrior(this.player.id);
+                        let dragons = warrior.dragons;
+                        let selected = dragons[arg.selection as number];
+                        let infoForm = new DWSUI()
+                        infoForm.title(selected.name);
+                        infoForm.body(selected.getInfo());
+                        infoForm.button("", `textures/ui/${selected.typeId.replace("dws:", "")}.v1`)
+                        infoForm.show(this.player)
+                    })
+                    break;
+                case 3:
+                    this.settingForm.show(this.player).then((arg) => {
+                        if (arg.canceled) return;
+                        switch (arg.selection) {
+                            case 0:
+                                this.colorForm.show(this.player).then((arg) => {
+                                    let colors = ["(", "[", "{", "}", "]", ")"];
+                                    if (arg.canceled) return;
+                                    this.player.setDynamicProperty("color", colors[arg.selection as number]);
+                                });
+                                break;
+                        }
+                    })
                     break;
                 default:
                     break;

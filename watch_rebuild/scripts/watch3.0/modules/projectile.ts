@@ -32,6 +32,7 @@ export abstract class Projectile {
     detect() {
         if (!this.base || !this.base.isValid) return;
         let enermy = getClosestEnermy(this.base);
+        if (!enermy) return;
         if (dist(enermy.location, this.base.location) <= (this.attr.range as number)){
             if (this.callbacks.hitEntity) this.callbacks.hitEntity(this, enermy);
             this.destory()
@@ -53,8 +54,9 @@ export class SimpleProjectile extends Projectile {
 
     constructor(entity: Entity, attr: ProjectileAttr, direction?: Vector3, callbacks?: ProjectileCallbacks) {
         super(entity, attr, callbacks);
+        let target = getClosestEnermy(entity) as Entity;
         if (!direction) {
-            let targetLoc = getClosestEnermy(entity).location;
+            let targetLoc = target.location;
             let ori = entity.location;
             direction = {x: targetLoc.x - ori.x, y: targetLoc.y - ori.y, z: targetLoc.z - ori.z};
         }
@@ -81,7 +83,7 @@ export class TraceProjectile extends Projectile {
 
     constructor(entity: Entity, attr: ProjectileAttr, target?: Entity, callbacks?: ProjectileCallbacks) {
         super(entity, attr, callbacks);
-        if (!target) target = getClosestEnermy(entity);        
+        if (!target) target = getClosestEnermy(entity) as Entity;        
         this.target = target;
         this.callbacks.spawn ? this.callbacks.spawn(this) : null;
     }

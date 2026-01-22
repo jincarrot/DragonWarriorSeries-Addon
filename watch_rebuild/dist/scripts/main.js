@@ -1,8 +1,11 @@
 // scripts/main.ts
-import { world as world4 } from "@minecraft/server";
+import { world as world7 } from "@minecraft/server";
 
 // scripts/watch3.0/modules/ability.ts
 import { system } from "@minecraft/server";
+
+// scripts/watch3.0/utils/game.ts
+import { world as world2 } from "@minecraft/server";
 
 // scripts/watch3.0/config/dragons.ts
 function defaultLevelRule(exp) {
@@ -17,7 +20,130 @@ var dragonData = {
     name: "\u96F7\u53E4\u66FC",
     rules: [defaultLevelRule, defaultEnergyRule],
     attributes: ["fire"],
-    abilities: []
+    abilities: [0]
+  }
+};
+
+// scripts/watch3.0/modules/collisions.ts
+var Collision = class {
+  constructor(dim) {
+    this.dim = dim;
+  }
+};
+var Ray = class extends Collision {
+  constructor(origin, direction, distance, dim) {
+    super(dim);
+    this.origin = origin;
+    this.direction = direction;
+    this.distance = distance;
+  }
+  getEntities() {
+    let entityRayCasts = this.dim.getEntitiesFromRay(this.origin, this.direction, { "maxDistance": this.distance });
+    let entities = [];
+    for (let e of entityRayCasts) {
+      entities.push(e.entity);
+    }
+    return entities;
+  }
+};
+
+// scripts/watch3.0/utils/debug.ts
+import { world } from "@minecraft/server";
+function alert(text) {
+  world.sendMessage(text);
+}
+
+// scripts/watch3.0/config/abilities.ts
+function normalAbilityCallback(attr) {
+  return {
+    start: (ability) => {
+      ability.spawnProjectile(attr.projectileType, ability.user.base.location, attr.trace ? "trace" /* Trace */ : "simple" /* Simple */);
+      if (attr.particles?.initial) {
+        let loc = ability.user.base.location;
+        for (let particleName of attr.particles.initial)
+          ability.user.base.dimension.spawnParticle(particleName, loc);
+      }
+    },
+    projectileCallbacks: {
+      hitEntity: (projectile, target) => {
+        let ability = manager.ability.getFromProjectile(projectile.base);
+        target.applyDamage(attr.damage * (1 + (ability?.user.level || 1) / 10));
+        alert(`${ability?.user.level}`);
+        if (attr.effects) for (let effectName in attr.effects) {
+          if (effectName == "fire") {
+            target.setOnFire(attr.effects[effectName][0] * (1 + (ability?.user.level || 1) / 10));
+            continue;
+          }
+          target.addEffect(effectName, attr.effects[effectName][0], { amplifier: attr.effects[effectName][1] });
+        }
+        if (attr.particles?.hitEntity) {
+          let loc = projectile.base.location;
+          for (let particleName of attr.particles.hitEntity)
+            projectile.base.dimension.spawnParticle(particleName, loc);
+        }
+      },
+      hitBlock: (projectile, location) => {
+        if (attr.particles?.hitBlock) {
+          let loc = location;
+          for (let particleName of attr.particles.hitBlock)
+            projectile.base.dimension.spawnParticle(particleName, loc);
+        }
+        projectile.base.dimension.createExplosion(location, attr.damage / 5);
+      },
+      main: (projectile) => {
+        if (attr.particles?.runtime) {
+          let loc = projectile.base.location;
+          for (let particleName of attr.particles.runtime)
+            projectile.base.dimension.spawnParticle(particleName, loc);
+        }
+      }
+    }
+  };
+}
+var ABILITIES = {
+  0: {
+    name: "\u54CD\u96F7\u706B\u7403",
+    attributes: ["fire" /* Fire */],
+    types: ["offensive" /* Offensive */],
+    cost: 30,
+    duration: 150,
+    projectileAttr: {
+      speed: 1,
+      range: 2
+    },
+    callbacks: normalAbilityCallback({
+      projectileType: "dws:fire_ball",
+      damage: 11,
+      effects: {
+        "fire": [5, 0]
+      }
+    })
+  },
+  1: {
+    name: "\u5947\u5F02\u5149\u7EBF",
+    attributes: ["wood" /* Wood */],
+    types: ["offensive" /* Offensive */],
+    cost: 30,
+    duration: 150,
+    callbacks: {
+      start: (ability) => {
+        let target = getClosestEnermy(ability.user.base);
+        if (!target) return;
+        let dir = {
+          x: target.location.x - ability.user.base.location.x,
+          y: target.location.y - ability.user.base.location.y,
+          z: target.location.z - ability.user.base.location.z
+        };
+        let collision = new Ray(ability.user.base.location, dir, 10, ability.user.base.dimension);
+        ability.createDetection(collision);
+      },
+      detectingCallbacks: {
+        main: (box) => {
+          for (let entity of box.entities)
+            entity.applyDamage(5);
+        }
+      }
+    }
   }
 };
 
@@ -28,19 +154,26 @@ function getClosestEnermy(entity) {
     location: entity.location,
     closest: 1
   };
-  if (entity.getComponent("minecraft:type_family").hasTypeFamily("monster")) {
+  if (entity.getComponent("minecraft:type_family")?.hasTypeFamily("monster")) {
     filter.families?.push("player");
     filter.families?.push("dragon");
   } else {
     filter.families?.push("monster");
   }
-  return entity.dimension.getEntities(filter)[0];
+  let targetEntities = entity.dimension.getEntities(filter);
+  return targetEntities ? targetEntities[0] : void 0;
 }
 function dist(a, b) {
   return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) + Math.pow(a.z - b.z, 2));
 }
 function isDragon(typeId) {
   return typeId in dragonData;
+}
+function isAbility(abilityId) {
+  return abilityId in ABILITIES;
+}
+function sendInfo(playerId, info) {
+  world2.getEntity(playerId).sendMessage(info);
 }
 
 // scripts/watch3.0/modules/projectile.ts
@@ -63,6 +196,7 @@ var Projectile = class _Projectile {
   detect() {
     if (!this.base || !this.base.isValid) return;
     let enermy = getClosestEnermy(this.base);
+    if (!enermy) return;
     if (dist(enermy.location, this.base.location) <= this.attr.range) {
       if (this.callbacks.hitEntity) this.callbacks.hitEntity(this, enermy);
       this.destory();
@@ -78,8 +212,9 @@ var Projectile = class _Projectile {
 var SimpleProjectile = class extends Projectile {
   constructor(entity, attr, direction, callbacks) {
     super(entity, attr, callbacks);
+    let target = getClosestEnermy(entity);
     if (!direction) {
-      let targetLoc = getClosestEnermy(entity).location;
+      let targetLoc = target.location;
       let ori = entity.location;
       direction = { x: targetLoc.x - ori.x, y: targetLoc.y - ori.y, z: targetLoc.z - ori.z };
     }
@@ -164,117 +299,6 @@ var DetectionBox = class _DetectionBox {
   }
 };
 
-// scripts/watch3.0/modules/collisions.ts
-var Collision = class {
-  constructor(dim) {
-    this.dim = dim;
-  }
-};
-var Ray = class extends Collision {
-  constructor(origin, direction, distance, dim) {
-    super(dim);
-    this.origin = origin;
-    this.direction = direction;
-    this.distance = distance;
-  }
-  getEntities() {
-    let entityRayCasts = this.dim.getEntitiesFromRay(this.origin, this.direction, { "maxDistance": this.distance });
-    let entities = [];
-    for (let e of entityRayCasts) {
-      entities.push(e.entity);
-    }
-    return entities;
-  }
-};
-
-// scripts/watch3.0/config/abilities.ts
-function normalAbilityCallback(attr) {
-  return {
-    start: (ability) => {
-      ability.spawnProjectile(attr.projectileType, ability.user.base.location, attr.trace ? "trace" /* Trace */ : "simple" /* Simple */);
-      if (attr.particles?.initial) {
-        let loc = ability.user.base.location;
-        for (let particleName of attr.particles.initial)
-          ability.user.base.dimension.spawnParticle(particleName, loc);
-      }
-    },
-    projectileCallbacks: {
-      hitEntity: (projectile, target) => {
-        target.applyDamage(attr.damage);
-        if (attr.effects) for (let effectName in attr.effects) {
-          if (effectName == "fire") {
-            target.setOnFire(attr.effects[effectName][0]);
-            continue;
-          }
-          target.addEffect(effectName, attr.effects[effectName][0], { amplifier: attr.effects[effectName][1] });
-        }
-        if (attr.particles?.hitEntity) {
-          let loc = projectile.base.location;
-          for (let particleName of attr.particles.hitEntity)
-            projectile.base.dimension.spawnParticle(particleName, loc);
-        }
-      },
-      hitBlock: (projectile, location) => {
-        if (attr.particles?.hitBlock) {
-          let loc = location;
-          for (let particleName of attr.particles.hitBlock)
-            projectile.base.dimension.spawnParticle(particleName, loc);
-        }
-        projectile.base.dimension.createExplosion(location, attr.damage / 5);
-      },
-      main: (projectile) => {
-        if (attr.particles?.runtime) {
-          let loc = projectile.base.location;
-          for (let particleName of attr.particles.runtime)
-            projectile.base.dimension.spawnParticle(particleName, loc);
-        }
-      }
-    }
-  };
-}
-var ABILITIES = {
-  0: {
-    name: "\u54CD\u96F7\u706B\u7403",
-    attributes: ["fire" /* Fire */],
-    types: ["offensive" /* Offensive */],
-    cost: 30,
-    duration: 150,
-    projectileAttr: {
-      speed: 1,
-      range: 2
-    },
-    callbacks: normalAbilityCallback({
-      projectileType: "dws:fire_ball",
-      damage: 11
-    })
-  },
-  1: {
-    name: "\u5947\u5F02\u5149\u7EBF",
-    attributes: ["wood" /* Wood */],
-    types: ["offensive" /* Offensive */],
-    cost: 30,
-    duration: 150,
-    callbacks: {
-      start: (ability) => {
-        let target = getClosestEnermy(ability.user.base);
-        let dir = {
-          x: target.location.x - ability.user.base.location.x,
-          y: target.location.y - ability.user.base.location.y,
-          z: target.location.z - ability.user.base.location.z
-        };
-        let collision = new Ray(ability.user.base.location, dir, 10, ability.user.base.dimension);
-        ability.createDetection(collision);
-      },
-      detectingCallbacks: {
-        main: (box) => {
-          for (let entity of box.entities)
-            entity.applyDamage(5);
-        }
-      }
-    }
-  }
-};
-
 // scripts/watch3.0/errors/abilityError.ts
 var AbilityProgressError = class extends Error {
   constructor(oldState, newState) {
@@ -288,6 +312,13 @@ var AbilityIdentifierError = class extends Error {
     let message = `Cannot find ability id ${abilityId}.`;
     super(message);
     this.name = "AbilityIdentifierError";
+  }
+};
+var AbilityInValidError = class extends Error {
+  constructor(abilityId, entityId) {
+    let message = `Entity ${entityId} doesn't has ability ${abilityId}.`;
+    super(message);
+    this.name = "AbilityInValidError";
   }
 };
 
@@ -311,7 +342,7 @@ var Ability = class _Ability {
     this.ticks = 0;
     this._state = "running" /* Running */;
     if (this.callbacks.start) this.callbacks.start(this);
-    this.runtimeId = system.runInterval(this.main, 2);
+    this.runtimeId = system.runInterval(() => this.main(), 2);
     if (!this.projectileAttr.attributes) this.projectileAttr.attributes = this.attr.attributes;
   }
   /**
@@ -329,7 +360,7 @@ var Ability = class _Ability {
   resume() {
     if (this._state != "pause" /* Pause */) throw new AbilityProgressError(this._state, "running" /* Running */);
     this._state = "running" /* Running */;
-    this.runtimeId = system.runInterval(this.main, 2);
+    this.runtimeId = system.runInterval(() => this.main(), 2);
     this.callbacks.resume ? this.callbacks.resume(this) : null;
   }
   /**
@@ -506,19 +537,34 @@ var AbilityManager = class {
 };
 var abilityManager = new AbilityManager();
 
+// scripts/watch3.0/managers/dragonManager.ts
+import { world as world6 } from "@minecraft/server";
+
 // scripts/watch3.0/managers/warriorManager.ts
-import { world as world3 } from "@minecraft/server";
+import { system as system3, world as world5 } from "@minecraft/server";
 
 // scripts/watch3.0/modules/warrior.ts
-import { world as world2 } from "@minecraft/server";
+import { world as world4 } from "@minecraft/server";
 
 // scripts/watch3.0/modules/dragon.ts
-import { world } from "@minecraft/server";
+import { system as system2, world as world3 } from "@minecraft/server";
 var Dragon = class {
   constructor(ownerId, typeId) {
     this.ownerId = ownerId;
     this.typeId = typeId;
     this.rules = dragonData[this.typeId]["rules"];
+    this.timerId = system2.runInterval(() => this.regenerate(), 60);
+  }
+  destory() {
+    system2.clearRun(this.timerId);
+  }
+  regenerate() {
+    if (this.callOutCoolDown > 0) {
+      this.callOutCoolDown -= 60;
+      if (this.callOutCoolDown < 0) this.callOutCoolDown = 0;
+    }
+    this.health += this.data.extra.healthRegenerationRate || 1;
+    this.addEnergy(this.data.extra.energyRegenerationRate || 1);
   }
   get data() {
     let data = JSON.parse(this.owner.getDynamicProperty("dws"));
@@ -548,10 +594,58 @@ var Dragon = class {
     return (this.base?.getComponent("minecraft:variant")).value;
   }
   get base() {
-    return world.getEntity(this.entityId);
+    return world3.getEntity(this.entityId);
   }
   get owner() {
-    return world.getEntity(this.ownerId);
+    return world3.getEntity(this.ownerId);
+  }
+  get callOutCoolDown() {
+    return this.data.extra.callOutCoolDown;
+  }
+  set callOutCoolDown(value) {
+    let extra = this.data.extra;
+    extra.callOutCoolDown = value;
+    this.setData("extra", extra);
+  }
+  get health() {
+    if (this.isExist)
+      return this.base.getComponent("minecraft:health")?.currentValue;
+    else return this.data.extra.health;
+  }
+  set health(value) {
+    if (value > this.maxHealth) value = this.maxHealth;
+    if (this.isExist) this.base.getComponent("minecraft:health")?.setCurrentValue(value);
+    else {
+      let extra = this.data.extra;
+      extra.health = value;
+      this.setData("extra", extra);
+    }
+  }
+  get maxHealth() {
+    if (this.isExist)
+      return this.base.getComponent("minecraft:health")?.effectiveMax;
+    else return this.data.extra.maxHealth;
+  }
+  set maxHealth(value) {
+    let extra = this.data.extra;
+    extra.maxHealth = value;
+    this.setData("extra", extra);
+  }
+  get healthRegenerationRate() {
+    return this.data.extra.healthRegenerationRate;
+  }
+  set healthRegenerationRate(value) {
+    let extra = this.data.extra;
+    extra.healthRegenerationRate = value;
+    this.setData("extra", extra);
+  }
+  get energyRenegerationRate() {
+    return this.data.extra.energyRegenerationRate;
+  }
+  set energyRenegerationRate(value) {
+    let extra = this.data.extra;
+    extra.energyRegenerationRate = value;
+    this.setData("extra", extra);
   }
   get entityId() {
     return this.data.entityId;
@@ -587,9 +681,28 @@ var Dragon = class {
   }
   useAbility(abilityId) {
     if (this.hasAbility(abilityId)) {
+      if (!this.base || !this.base.isValid) {
+        sendInfo(this.ownerId, `[${this.name}]\u4F7F\u7528\u6280\u80FD[${ABILITIES[abilityId].name}]\u5931\u8D25\uFF01\u539F\u56E0\uFF1A\u9F99\u4E0D\u5728\u4E16\u754C\u4E2D`);
+        return;
+      }
+      if (!isAbility(abilityId)) throw new AbilityInValidError(abilityId, this.base?.id);
+      let useCondition = ABILITIES[abilityId].useCondition;
+      if (typeof useCondition == "function") {
+        if (!useCondition(this)) return;
+      }
+      if ((!useCondition || typeof useCondition != "function" && useCondition.indexOf(2 /* NeedEnergy */) >= 0) && this.energy < ABILITIES[abilityId].cost) {
+        sendInfo(this.ownerId, `[${this.name}]\u4F7F\u7528\u6280\u80FD[${ABILITIES[abilityId].name}]\u5931\u8D25\uFF01\u539F\u56E0\uFF1A\u80FD\u91CF\u4E0D\u8DB3`);
+        return;
+      }
+      if ((!useCondition || typeof useCondition != "function" && useCondition.indexOf(1 /* NeedEnermy */) >= 0) && !getClosestEnermy(this.base)) {
+        sendInfo(this.ownerId, `[${this.name}]\u4F7F\u7528\u6280\u80FD[${ABILITIES[abilityId].name}]\u5931\u8D25\uFF01\u539F\u56E0\uFF1A\u672A\u53D1\u73B0\u654C\u602A`);
+        return;
+      }
       let ability = abilityManager.createAbility(this, abilityId);
+      this.reduceEnergy(ability.attr.cost);
       return ability;
     }
+    throw new AbilityIdentifierError(abilityId);
   }
   /**
    * current energy of this dragon.
@@ -672,6 +785,7 @@ var Dragon = class {
    * @returns Remains amount.
    */
   addExp(value) {
+    let levelBefore = this.level;
     let current = this.exp + value;
     let remain = 0;
     if (current > this.maxExp) {
@@ -679,6 +793,7 @@ var Dragon = class {
       current = this.maxExp;
     }
     this.exp = current;
+    if (this.level > levelBefore) this.playUpgradeAnimation(levelBefore);
     return remain;
   }
   /**
@@ -709,23 +824,52 @@ var Dragon = class {
   get maxLevel() {
     return this.rules[0](this.data.maxExp);
   }
+  playUpgradeAnimation(levelBefore) {
+    this.energy = this.maxEnergy;
+    sendInfo(this.ownerId, `${this.name}\u4ECE${levelBefore}\u7EA7\u5347\u7EA7\u81F3${this.level}\u7EA7\uFF01`);
+    for (let l = levelBefore || 1; l < this.level; l++) this.base?.triggerEvent(`dws:lv${l}_${l + 1}`);
+    if (this.isExist) {
+    }
+  }
   /**
    * Returns true if this dragon exist in the world.
    */
   get isExist() {
-    let entity = world.getEntity(this.entityId);
+    let entity = world3.getEntity(this.entityId);
     return entity && entity.isValid ? true : false;
+  }
+  /**
+   * Save this dragon's data to structure.
+   */
+  saveToStructure() {
+    if (!this.isExist) return;
+    this.base?.teleport({ x: this.base.location.x, y: this.base.location.y + 10, z: this.base.location.z });
+    let loc = this.base?.location;
+    this.base?.runCommand(`structure save "${this.owner.name}_${this.typeId}" ${loc?.x} ${loc?.y} ${loc?.z} ${loc?.x} ${loc?.y} ${loc?.z} true disk`);
+    this.base?.teleport({ x: this.base.location.x, y: this.base.location.y - 9, z: this.base.location.z });
+  }
+  applyData() {
+    if (!this.isExist) return;
+    for (let level = 1; level < this.level; level++) this.base?.triggerEvent(`dws:lv${level}_${level + 1}`);
+    if (this.data.extra.health > 0) this.health = this.data.extra.health;
   }
   /**
    * Switch the in / out state of this dragon.
    * @returns True if this dragon is out now else false.
    */
   switchState() {
+    if (this.callOutCoolDown) {
+      sendInfo(this.ownerId, `[${this.name}]\u53EC\u5524\u51B7\u5374\u4E2D\uFF0C\u5269\u4F59\u65F6\u95F4\uFF1A${this.callOutCoolDown / 20}s`);
+      return this.isExist;
+    }
     if (this.isExist) {
-      this.base?.teleport({ x: this.base.location.x, y: this.base.location.y + 10, z: this.base.location.z });
-      let loc2 = this.base?.location;
-      this.base?.runCommand(`structure save "${this.owner.name}_${this.typeId}" ${loc2?.x} ${loc2?.y} ${loc2?.z} ${loc2?.x} ${loc2?.y} ${loc2?.z} true disk`);
+      let health = this.base?.getComponent("minecraft:health");
+      let currentValue = health?.currentValue || 0;
+      let maxValue = health?.effectiveMax || 0;
+      this.saveToStructure();
       this.base?.remove();
+      this.health = currentValue;
+      this.maxHealth = maxValue;
       return false;
     }
     let loc = this.owner.location;
@@ -739,6 +883,7 @@ var Dragon = class {
         }
       }
     });
+    this.applyData();
     return true;
   }
   /**
@@ -747,8 +892,17 @@ var Dragon = class {
   evolve(forceEvolve = false) {
   }
   getInfo() {
-    return `\u7B49\u7EA7\uFF1A${this.level} / ${this.maxLevel} 
+    let stateInfo = `\u72B6\u6001: ${this.isExist ? "\u5DF2\u53EC\u5524" : this.callOutCoolDown ? `\u53EC\u5524\u51B7\u5374\uFF1A ${this.callOutCoolDown / 20}s` : "\u53EC\u56DE"}
 `;
+    let healthInfo = `\u751F\u547D\u503C: ${this.health} / ${this.maxHealth}
+`;
+    let levelInfo = `\u7B49\u7EA7: ${this.level} / ${this.maxLevel} 
+`;
+    let energyInfo = `\u80FD\u91CF: ${this.energy} / ${this.maxEnergy}
+`;
+    let expInfo = `\u603B\u7ECF\u9A8C: ${this.exp}
+`;
+    return stateInfo + healthInfo + levelInfo + energyInfo + expInfo;
   }
 };
 
@@ -801,15 +955,41 @@ var Watch = class {
     this.form = new DWSUI();
     this.form.title("\u6597\u9F99\u624B\u73AF");
     this.form.button("\u53EC\u5524/\u53EC\u56DE");
+    this.form.button("\u4F7F\u7528\u6280\u80FD");
+    this.form.button("\u67E5\u770B\u4FE1\u606F");
+    this.form.button("\u8BBE\u7F6E");
   }
   /**
    * Chioce form.
    */
-  get choiceForm() {
+  choiceForm(showAll = true) {
     let form = new DWSUI();
     form.title("\u9009\u62E9");
     let dragons = manager.warrior.getWarrior(this.player.id).dragons;
-    for (let dragon of dragons) form.button(dragon.name);
+    for (let dragon of dragons) if (showAll || dragon.isExist) form.button(dragon.name, `textures/ui/${dragon.typeId.replace("dws:", "")}.v1`);
+    return form;
+  }
+  get colorForm() {
+    let form = new DWSUI();
+    form.title("\u9009\u62E9\u989C\u8272");
+    let btns = [["\u91D1", "gold"], ["\u6728", "tree"], ["\u6C34", "water"], ["\u706B", "fire"], ["\u571F", "earth"], ["\u5149", "light"]];
+    for (let btn of btns) form.button(btn[0], `textures/ui/${btn[1]}logo`);
+    return form;
+  }
+  get settingForm() {
+    let form = new DWSUI();
+    form.title("\u9009\u62E9");
+    form.button("\u754C\u9762\u989C\u8272");
+    return form;
+  }
+  abilityForm(selectId) {
+    let warrior = manager.warrior.getWarrior(this.player.id);
+    let dragons = warrior.dragons;
+    let selected = dragons[selectId];
+    let form = new DWSUI();
+    form.title("\u9009\u62E9\u6280\u80FD");
+    for (let abilityId of selected.abilities)
+      if (isAbility(abilityId)) form.button(ABILITIES[abilityId].name);
     return form;
   }
   /**
@@ -820,6 +1000,13 @@ var Watch = class {
     let dragons = warrior.dragons;
     let selected = dragons[selectId];
     selected.switchState();
+  }
+  useAbility(dragonId, abilityId) {
+    let warrior = manager.warrior.getWarrior(this.player.id);
+    let dragons = warrior.dragons;
+    let selected = dragons[dragonId];
+    let abilities = selected.abilities;
+    selected.useAbility(abilities[abilityId]);
   }
   /**
    * show infos of dragons. 
@@ -832,12 +1019,47 @@ var Watch = class {
       if (arg.canceled) return;
       switch (arg.selection) {
         case 0:
-          this.choiceForm.show(this.player).then((arg2) => {
+          this.choiceForm().show(this.player).then((arg2) => {
             if (arg2.canceled) return;
             this.switchState(arg2.selection);
           });
           break;
         case 1:
+          this.choiceForm(false).show(this.player).then((arg2) => {
+            if (arg2.canceled) return;
+            let dragonId = arg2.selection;
+            this.abilityForm(arg2.selection).show(this.player).then((arg3) => {
+              if (arg3.canceled) return;
+              this.useAbility(dragonId, arg3.selection);
+            });
+          });
+          break;
+        case 2:
+          this.choiceForm().show(this.player).then((arg2) => {
+            if (arg2.canceled) return;
+            let warrior = manager.warrior.getWarrior(this.player.id);
+            let dragons = warrior.dragons;
+            let selected = dragons[arg2.selection];
+            let infoForm = new DWSUI();
+            infoForm.title(selected.name);
+            infoForm.body(selected.getInfo());
+            infoForm.button("", `textures/ui/${selected.typeId.replace("dws:", "")}.v1`);
+            infoForm.show(this.player);
+          });
+          break;
+        case 3:
+          this.settingForm.show(this.player).then((arg2) => {
+            if (arg2.canceled) return;
+            switch (arg2.selection) {
+              case 0:
+                this.colorForm.show(this.player).then((arg3) => {
+                  let colors = ["(", "[", "{", "}", "]", ")"];
+                  if (arg3.canceled) return;
+                  this.player.setDynamicProperty("color", colors[arg3.selection]);
+                });
+                break;
+            }
+          });
           break;
         default:
           break;
@@ -847,13 +1069,48 @@ var Watch = class {
 };
 
 // scripts/watch3.0/modules/warrior.ts
+import { ModalFormData } from "@minecraft/server-ui";
+
+// scripts/watch3.0/modules/extra.ts
+var Backpack = class {
+  constructor(container) {
+    this.container = container;
+  }
+  getItemTotalAmount(itemType) {
+    let amount = 0;
+    for (let i = 0; i < this.container.size; i++) {
+      let item = this.container.getItem(i);
+      if (item && item.typeId == itemType) amount += item.amount;
+    }
+    return amount;
+  }
+  clearItem(itemType, amount) {
+    for (let i = 0; i < this.container.size; i++) {
+      let item = this.container.getItem(i);
+      if (item && item.typeId == itemType) {
+        amount -= item.amount;
+        if (amount >= 0) this.container.setItem(i);
+        else {
+          item.amount = -amount;
+          this.container.setItem(i, item);
+          return;
+        }
+      }
+    }
+  }
+};
+
+// scripts/watch3.0/modules/warrior.ts
 var defaultData = {
   dragons: {}
 };
 var Warrior = class {
   constructor(playerId) {
-    this.base = world2.getEntity(playerId);
+    this.base = world4.getEntity(playerId);
     this.watch = new Watch(this.base);
+    this.dragonMap = {};
+    for (let dragonType in this.data.dragons) this.dragonMap[dragonType] = new Dragon(this.base.id, dragonType);
+    this.backpack = new Backpack(this.base.getComponent("minecraft:inventory")?.container);
   }
   /**
    * Player's data.
@@ -873,15 +1130,18 @@ var Warrior = class {
   get dragons() {
     let dragonsData = this.data.dragons;
     let dragonList = [];
-    for (let dragonType in dragonsData)
-      dragonList.push(new Dragon(this.base.id, dragonType));
+    for (let dragonType in dragonsData) {
+      if (!(dragonType in this.dragonMap))
+        this.dragonMap[dragonType] = new Dragon(this.base.id, dragonType);
+      dragonList.push(this.dragonMap[dragonType]);
+    }
     return dragonList;
   }
   /**
    * Add a dragon which is currently exists in the world to the player.
    */
   addDragon(entityId, forceAdd = false) {
-    let entity = world2.getEntity(entityId);
+    let entity = world4.getEntity(entityId);
     if (!entity || !entity?.isValid) return;
     if (entity.typeId in this.data.dragons && !forceAdd)
       throw new DragonExistError(this.base.name, entity.typeId);
@@ -891,12 +1151,20 @@ var Warrior = class {
       entityId: entity.id,
       exp: 0,
       energy: 0,
-      ownerId: this.base.id
+      ownerId: this.base.id,
+      extra: {
+        health: 0,
+        maxHealth: 20,
+        healthRegenerationRate: 1,
+        energyRegenerationRate: 1,
+        callOutCoolDown: 0
+      }
     };
     let data = Object.assign(defaultAttr, dragonData[entity.typeId]);
     let warriorData = this.data;
     warriorData.dragons[entity.typeId] = data;
     this.data = warriorData;
+    this.getDragon(entity.typeId)?.saveToStructure();
   }
   /**
    * Spawn and add a dragon to the player.
@@ -917,7 +1185,7 @@ var Warrior = class {
   }
   getDragon(dragonType) {
     for (let dragon of this.dragons) {
-      if (dragon.typeId == dragonType) return this.dragons;
+      if (dragon.typeId == dragonType) return dragon;
     }
   }
   removeDragon(dragonType) {
@@ -927,36 +1195,78 @@ var Warrior = class {
       this.data = data;
     }
   }
+  showExpForm() {
+    let dragonNames = [];
+    this.dragons.forEach((dragon) => dragonNames.push(dragon.name));
+    let expAmount = this.backpack.getItemTotalAmount("dws:exp");
+    let form = new ModalFormData();
+    form.title("\u4F7F\u7528\u7ECF\u9A8C\u70B9");
+    form.dropdown("\u4F7F\u7528\u4E8E", dragonNames);
+    form.slider("\u4F7F\u7528\u6570\u91CF", 1, expAmount);
+    form.show(this.base).then((arg) => {
+      if (arg.canceled) return;
+      if (arg.formValues) {
+        let selected = this.dragons[arg.formValues[0]];
+        let amount = arg.formValues[1];
+        let remain = selected.addExp(amount * 10) / 10;
+        this.backpack.clearItem("dws:exp", remain);
+      }
+    });
+  }
 };
 
 // scripts/watch3.0/managers/warriorManager.ts
 var WarriorManager = class {
   constructor() {
     this.warriors = {};
-    world3.afterEvents.playerSpawn.subscribe((arg) => {
-      if (!(arg.player.id in this.warriors)) {
-        this.warriors[arg.player.id] = new Warrior(arg.player.id);
-      }
+    system3.run(() => world5.getAllPlayers().forEach((player) => this.getWarrior(player.id)));
+    world5.afterEvents.playerSpawn.subscribe((arg) => {
+      this.getWarrior(arg.player.id);
     });
   }
   getWarrior(playerId) {
     if (!(playerId in this.warriors)) this.warriors[playerId] = new Warrior(playerId);
+    if (!this.warriors[playerId].base.isValid) this.warriors[playerId] = new Warrior(playerId);
     return this.warriors[playerId];
+  }
+  getAllWarriors() {
+    let warriors = [];
+    for (let warriorId in this.warriors) warriors.push(this.warriors[warriorId]);
+    return warriors;
   }
 };
 var warriorManager = new WarriorManager();
+
+// scripts/watch3.0/managers/dragonManager.ts
+var DragonManager = class {
+  constructor() {
+    world6.afterEvents.entityDie.subscribe((arg) => {
+      let entityId = arg.deadEntity.id;
+      let typeId = arg.deadEntity.typeId;
+      warriorManager.getAllWarriors().forEach((warrior) => {
+        if (warrior.getDragon(typeId)?.entityId == entityId) {
+          let deadDragon = warrior.getDragon(typeId);
+          deadDragon.callOutCoolDown = 6e3;
+          return;
+        }
+      });
+    });
+  }
+};
+var dragonManager = new DragonManager();
 
 // scripts/watch3.0/managers/manager.ts
 var Manager = class {
   constructor() {
     this.warrior = warriorManager;
     this.ability = abilityManager;
+    this.dragon = dragonManager;
   }
 };
 var manager = new Manager();
 
 // scripts/main.ts
-var aEvents = world4.afterEvents;
+var aEvents = world7.afterEvents;
 aEvents.itemUse.subscribe((arg) => {
   if (arg.itemStack.typeId.indexOf("dws:") < 0) return;
   let warrior = manager.warrior.getWarrior(arg.source.id);
@@ -973,6 +1283,9 @@ aEvents.itemUse.subscribe((arg) => {
         }
       }
     }
+  }
+  if (arg.itemStack.typeId == "dws:exp") {
+    warrior.showExpForm();
   }
 });
 

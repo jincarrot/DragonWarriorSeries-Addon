@@ -22,5 +22,8 @@ aEvents.itemUse.subscribe((arg) => {
             }
         }
     }
+    if (arg.itemStack.typeId == "dws:exp") {
+        warrior.showExpForm();
+    }
 });
 //# sourceMappingURL=main.js.map
