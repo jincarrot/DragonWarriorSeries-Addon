@@ -1,6 +1,7 @@
 import { world } from "@minecraft/server";
 import { tryGetElements } from "./game";
 import { ElementInteractions } from "../config/elements";
+import { alert } from "./debug";
 
 //Elements interaction.
 world.afterEvents.entityHurt.subscribe((arg) => {
@@ -21,11 +22,14 @@ world.afterEvents.entityHurt.subscribe((arg) => {
             if (decrease.indexOf(hurtEl) >= 0) effect--;
         }
     }
-    for (let t = 0; t < effect; t++) 
-        if (attacker.isValid) attacker.applyDamage(arg.damage / (t + 1));
+    for (let t = 0; t < effect; t++) {
+        let health = hurt.getComponent("minecraft:health");
+        if (hurt.isValid && health) 
+            health.setCurrentValue(Math.max(0, health.currentValue - arg.damage / (t + 1)));
+    }
     for (let t = 0; t < -effect; t++) {
-        let health = attacker.getComponent("minecraft:health");
-        if (attacker.isValid && health) 
-            health.setCurrentValue(health.currentValue + arg.damage / (t + 2));
+        let health = hurt.getComponent("minecraft:health");
+        if (hurt.isValid && health) 
+            health.setCurrentValue(Math.min(health.effectiveMax, health.currentValue + arg.damage / (t + 2)));
     }
 })

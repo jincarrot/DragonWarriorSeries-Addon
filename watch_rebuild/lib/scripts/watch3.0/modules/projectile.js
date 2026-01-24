@@ -12,6 +12,7 @@ export class Projectile {
             attr.range = 1;
         if (!attr.attributes)
             attr.attributes = [];
+        this.base.setDynamicProperty("elements", JSON.stringify(this.attr.attributes));
     }
     destory() {
         this.callbacks.despawn ? this.callbacks.despawn(this) : null;

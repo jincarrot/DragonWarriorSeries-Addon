@@ -1,0 +1,21 @@
+{
+	"mob.reguman.attack": {
+		"category": "neutral",
+		"sounds": [
+			{
+				"name": "sounds/mob/reguman/attack",
+				"volume": 0.5
+			}
+		]
+	},
+	"levelup.walk": {
+        "category": "neutral",
+		"sounds": [
+			{
+				"name": "sounds/walk",
+				"volume": 1,
+				"load_on_low_memory": true
+			}
+		]
+    }
+}

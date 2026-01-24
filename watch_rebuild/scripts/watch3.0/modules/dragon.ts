@@ -72,13 +72,21 @@ export class Dragon {
      * Current stage of this dragon, that is, evovled times.
      */
     get stage() {
-        return (this.base?.getComponent("minecraft:variant") as EntityVariantComponent).value
+        return this.isExist ? (this.base?.getProperty("dws:evolved") ? 1 : 0) : 0;
     }
     get base() {
         return world.getEntity(this.entityId);
     }
     get owner() {
         return world.getEntity(this.ownerId) as Player;
+    }
+    get evolutionPermission() {
+        return this.data.skills.enableEvolve;
+    }
+    set evolutionPermission(value: boolean) {
+        let skills = this.data.skills;
+        skills.enableAbility = value;
+        this.setData("skills", skills);
     }
     get callOutCoolDown() {
         return this.data.extra.callOutCoolDown;
@@ -338,7 +346,7 @@ export class Dragon {
         sendInfo(this.ownerId, `${this.name}从${levelBefore}级升级至${this.level}级！`);
         for (let l = (levelBefore || 1); l < this.level; l++) this.base?.triggerEvent(`dws:lv${l}_${l + 1}`);
         if (this.isExist) {
-            //
+            // animation
         }
     }
 
@@ -348,6 +356,10 @@ export class Dragon {
     get isExist() {
         let entity = world.getEntity(this.entityId);
         return entity && entity.isValid ? true : false;
+    }
+
+    get canEvolve() {
+        return this.isExist && this.evolutionPermission && this.energy > 50;
     }
 
     /**
@@ -378,13 +390,16 @@ export class Dragon {
         }
         if (this.isExist) {
             // call in
-            let health = this.base?.getComponent("minecraft:health");
-            let currentValue = health?.currentValue || 0;
-            let maxValue = health?.effectiveMax || 0;
-            this.saveToStructure();
-            this.base?.remove();
-            this.health = currentValue;
-            this.maxHealth = maxValue;
+            this.back();
+            system.runTimeout(() => {
+                let health = this.base?.getComponent("minecraft:health");
+                let currentValue = health?.currentValue || 0;
+                let maxValue = health?.effectiveMax || 0;
+                this.saveToStructure();
+                this.base?.remove();
+                this.health = currentValue;
+                this.maxHealth = maxValue;
+            }, 1);
             return false;
         }
         // call out
@@ -408,7 +423,17 @@ export class Dragon {
      * Evolve this dragon.
      */
     evolve(forceEvolve = false) {
-        //
+        if (this.canEvolve || forceEvolve)
+            this.base?.triggerEvent("dws:evolve");
+    }
+
+    back() {
+        if (this.isExist && this.stage) {
+            let health = this.health;
+            this.base?.triggerEvent("dws:back");
+            this.applyData();
+            this.health = health;
+        }
     }
 
     getInfo() {

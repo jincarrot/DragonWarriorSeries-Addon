@@ -1,0 +1,46 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:kavili",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/kavili"
+			},
+			"geometry": {
+				"default": "geometry.kavili"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"texture": "kavili_spawn_egg"
+			},
+			"animations": {
+				"move": "controller.animation.kavili.move",
+				"attack": "animation.kavili.attack",
+				"sit": "animation.kavili.sit",
+				"always": "animation.kavili.always",
+				"walk": "animation.kavili.walk",
+				"gain_exp": "animation.kavili.gain_exp",
+				"lt": "animation.common.look_at_target",
+				"lp": "animation.common.look_at_player"
+			},
+			"scripts": {
+				"animate": [
+					{"move": "query.is_moving"},
+					{"attack":"v.attack_time"},
+					{"sit":"query.is_sitting"},
+					"always",
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"goldf": "dws:goldf"
+			}
+		}
+	}
+}

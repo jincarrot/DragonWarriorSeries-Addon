@@ -1,0 +1,46 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:semela",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/semela"
+			},
+			"geometry": {
+				"default": "geometry.semela"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"texture": "semela_spawn_egg"
+			},
+			"animations": {
+				"move": "controller.animation.semela.move",
+				"attack": "animation.semela.attack",
+				"sit": "animation.semela.sit",
+				"always": "animation.semela.always",
+				"walk": "animation.semela.walk",
+				"gain_exp": "animation.semela.gain_exp",
+				"lt": "animation.common.look_at_target",
+				"lp": "animation.common.look_at_player"
+			},
+			"scripts": {
+				"animate": [
+					{"move": "query.is_moving"},
+					{"attack":"v.attack_time"},
+					{"sit":"query.is_sitting"},
+					"always",
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"treef": "dws:treef"
+			}
+		}
+	}
+}

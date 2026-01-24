@@ -15,6 +15,10 @@ export var AbilityType;
      * Ability that will heal its user.
      */
     AbilityType["Therapeutic"] = "therapeutic";
+    /**
+     * Ability that will give debuffs to enermy.
+     */
+    AbilityType["Debuff"] = "debuff";
 })(AbilityType || (AbilityType = {}));
 export var TraceModeType;
 (function (TraceModeType) {

@@ -1,6 +1,7 @@
 import { world } from "@minecraft/server";
 import { manager } from "./watch3.0/managers/manager";
 import { isDragon } from "./watch3.0/utils/game";
+import "./watch3.0/utils/base";
 let aEvents = world.afterEvents;
 aEvents.itemUse.subscribe((arg) => {
     if (arg.itemStack.typeId.indexOf("dws:") < 0)

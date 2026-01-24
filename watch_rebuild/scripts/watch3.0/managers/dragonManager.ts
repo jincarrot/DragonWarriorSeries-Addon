@@ -1,4 +1,4 @@
-import { world } from "@minecraft/server";
+import { system, world } from "@minecraft/server";
 import { alert } from "../utils/debug";
 import { warriorManager } from "./warriorManager";
 import { Dragon } from "../modules/dragon";
@@ -9,13 +9,15 @@ export class DragonManager{
         world.afterEvents.entityDie.subscribe((arg) => {
             let entityId = arg.deadEntity.id;
             let typeId = arg.deadEntity.typeId;
-            warriorManager.getAllWarriors().forEach((warrior) => {
-                if(warrior.getDragon(typeId)?.entityId == entityId) {
+            system.runTimeout(() => {warriorManager.getAllWarriors().forEach((warrior) => {
+                if (warrior.getDragon(typeId)?.entityId == entityId) {
                     let deadDragon = warrior.getDragon(typeId) as Dragon;
                     deadDragon.callOutCoolDown = 6000;
+                    deadDragon.health = 1;
+                    deadDragon.reduceExp(10);
                     return;
                 }
-            })
+            })}, 30)
         })
     }
 }

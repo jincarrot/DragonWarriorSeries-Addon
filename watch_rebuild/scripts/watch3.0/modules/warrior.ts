@@ -72,12 +72,18 @@ export class Warrior {
             exp: 0,
             energy: 0,
             ownerId: this.base.id,
+            stage: 0,
             extra: {
                 health: 0,
                 maxHealth: 20,
                 healthRegenerationRate: 1,
                 energyRegenerationRate: 1,
                 callOutCoolDown: 0
+            },
+            skills: {
+                enableAbility: false,
+                enableCombine: false,
+                enableEvolve: true
             }
         }
         let data = Object.assign(defaultAttr, dragonData[entity.typeId]);

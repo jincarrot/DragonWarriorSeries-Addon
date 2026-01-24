@@ -1,0 +1,73 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.dragon_v2.move": {
+            "initial_state": "idle",
+            "states": {
+                "idle": {
+                    "animations": [
+                        "v2_always"
+                    ],
+                    "transitions": [
+                        {
+                            "walking": "q.ground_speed > 1.0"
+                        },
+                        {
+                            "running": "q.ground_speed > 10"
+                        }
+                    ],
+                    "blend_transition": 0.2
+                },
+                "walking": {
+                    "animations": [
+                        "v2_walk"
+                    ],
+                    "transitions": [
+                        {
+                            "idle": "q.ground_speed < 0.2"
+                        },
+                        {
+                            "running": "q.ground_speed > 8"
+                        }
+                    ],
+                    "blend_transition": 0.2
+                },
+                "running": {
+                    "animations": [
+                        "v2_run"
+                    ],
+                    "transitions": [
+                        {
+                            "idle": "q.ground_speed < 0.2"
+                        }
+                    ],
+                    "blend_transition": 0.2
+                }
+            }
+        },
+        "controller.animation.dragon_v2.sit": {
+            "initial_state": "idle",
+            "states": {
+                "idle": {
+                    "transitions": [
+                        {
+                            "sitting": "q.is_sitting"
+                        }
+                    ],
+                    "blend_transition": 0.2
+                },
+                "sitting": {
+                    "animations": [
+                        "v2_sitting"
+                    ],
+                    "transitions": [
+                        {
+                            "idle": "!q.is_sitting"
+                        }
+                    ],
+                    "blend_transition": 0.2
+                }
+            }
+        }
+    }
+}

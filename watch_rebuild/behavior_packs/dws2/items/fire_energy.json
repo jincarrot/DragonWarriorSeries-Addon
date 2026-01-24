@@ -1,0 +1,17 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "dws:fire_energy",
+      "category": "items"
+    },
+    "components": {
+      "minecraft:icon": {
+        "texture": "fire_energy"
+      },
+      "minecraft:creative_category": {
+        "parent": "itemGroup.name.items"
+      }  
+    }
+  }
+}

@@ -186,7 +186,6 @@ function normalAbilityCallback(attr: NormalAbilityAttr): AbilityCallbacks {
             hitEntity: (projectile, target) => {
                 let ability = manager.ability.getFromProjectile(projectile.base);
                 target.applyDamage(attr.damage * (1 + (ability?.user.level || 1) / 10.0));
-                alert(`${ability?.user.level}`);
                 if (attr.effects) for (let effectName in attr.effects) {
                     if (effectName == "fire") {
                         target.setOnFire(attr.effects[effectName][0] * (1 + (ability?.user.level || 1) / 10.0));

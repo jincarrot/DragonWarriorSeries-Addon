@@ -38,7 +38,7 @@ export function isAbility(abilityId: number) {
 }
 
 export function isElement(typeId: string) {
-    return typeId in Object.values(ElementType);
+    return Object.values(ElementType).includes(typeId as ElementType);
 }
 
 export function sendInfo(playerId: string, info: string) {

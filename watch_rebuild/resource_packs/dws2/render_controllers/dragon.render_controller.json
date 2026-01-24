@@ -1,0 +1,22 @@
+{
+    "format_version": "1.10.0",
+    "render_controllers": {
+        "controller.render.dragon_dws": {
+            "arrays": {
+                "geometries": {
+                    "Array.geo": ["Geometry.default", "Geometry.evolved"]
+                },
+                "textures": {
+                    "Array.texture": ["Texture.default", "Texture.evolved"]
+                }
+            },
+            "geometry": "Array.geo[v.is_evolved ? 1 : 0]",
+            "materials": [
+                {
+                    "*": "material.default"
+                }
+            ],
+            "textures": ["Array.texture[v.is_evolved ? 1 : 0]"]
+        }
+    }
+}

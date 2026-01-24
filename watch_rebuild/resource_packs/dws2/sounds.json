@@ -1,0 +1,13 @@
+{
+	"entity_sounds": {
+		"entities": {
+			"dragon:reguman":{
+				"volume": 1.0,
+				"pitch": [ 0.8, 1.2 ],
+				"events": {
+					"attack": "mob.reguman.attack"
+				}
+			}
+		}
+	}
+}

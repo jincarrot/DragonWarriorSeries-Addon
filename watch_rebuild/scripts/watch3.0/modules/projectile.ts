@@ -20,6 +20,7 @@ export abstract class Projectile {
         this.id = Projectile._id++;
         if (!attr.range) attr.range = 1;
         if (!attr.attributes) attr.attributes = [];
+        this.base.setDynamicProperty("elements", JSON.stringify(this.attr.attributes));
     }
 
     abstract main(): void;

@@ -1,0 +1,23 @@
+{
+    "format_version": "1.8.0",
+    "animations": {
+        "animation.dragons.sitting": {
+            "loop": true,
+            "animation_length": 1,
+            "timeline": {
+                "0.0": [
+                   "/tag @s add sitting"
+                ]
+            }
+        },
+        "animation.dragons.standing": {
+            "loop": true,
+            "animation_length": 1,
+            "timeline": {
+                "0.0": [
+                   "/tag @s remove sitting"
+                ]
+            }
+        }
+    }
+}

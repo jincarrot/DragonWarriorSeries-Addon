@@ -1,0 +1,44 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:sori",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/sori"
+			},
+			"geometry": {
+				"default": "geometry.sori"
+			},
+			"render_controllers": ["controller.render.default"],
+			"spawn_egg": {
+				"texture": "sori_spawn_egg"
+			},
+			"animations":{
+				"move": "controller.animation.sori.move",
+				"attack": "animation.sori.attack",
+				"sit":"animation.sori.sit",
+				"always":"animation.sori.always",
+				"walk": "animation.sori.walk",
+				"attack_l": "animation.sori.attack_l",
+				"gain_exp":"animation.sori.gain_exp"
+			},
+			"scripts": {
+				"animate": [
+					{"move": "query.is_moving"},
+					{"attack":"v.attack_time"},
+					{"sit":"query.is_sitting"},
+					"always",
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"lightf": "dws:lightf"
+			}
+
+		}
+	}
+}

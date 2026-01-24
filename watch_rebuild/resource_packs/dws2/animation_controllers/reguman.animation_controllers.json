@@ -1,0 +1,65 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.reguman.v1.move": {
+			"initial_state": "idle",
+            "states": {
+				"move": {
+					"animations":[
+						"walk"
+					],
+					"particle_effects":[
+						{"effect":"firef"}
+					],
+					"transitions": [
+                        {
+                            "idle": "q.ground_speed < 0.2"
+                        }
+                    ],
+                    "blend_transition": 0.2
+				},
+				"idle": {
+					"animations": [
+						"always"
+					],
+					"transitions": [
+                        {
+                            "move": "q.ground_speed > 1.0"
+                        }
+                    ],
+                    "blend_transition": 0.2
+				}
+            }
+        },
+		"controller.animation.reguman.v1.sit": {
+			"initial_state": "idle",
+            "states": {
+				"idle": {
+					"animations":[
+						"always"
+					],
+					"particle_effects":[
+						{"effect":"firef"}
+					],
+					"transitions": [
+                        {
+                            "sit": "q.is_sitting"
+                        }
+                    ],
+                    "blend_transition": 0.2
+				},
+				"sit": {
+					"animations": [
+						"sitting"
+					],
+					"transitions": [
+                        {
+                            "idle": "!q.is_sitting"
+                        }
+                    ],
+                    "blend_transition": 0.2
+				}
+            }
+        }
+    }
+}

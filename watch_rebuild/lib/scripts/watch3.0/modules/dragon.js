@@ -53,13 +53,21 @@ export class Dragon {
      */
     get stage() {
         var _a;
-        return ((_a = this.base) === null || _a === void 0 ? void 0 : _a.getComponent("minecraft:variant")).value;
+        return this.isExist ? (((_a = this.base) === null || _a === void 0 ? void 0 : _a.getProperty("dws:evolved")) ? 1 : 0) : 0;
     }
     get base() {
         return world.getEntity(this.entityId);
     }
     get owner() {
         return world.getEntity(this.ownerId);
+    }
+    get evolutionPermission() {
+        return this.data.skills.enableEvolve;
+    }
+    set evolutionPermission(value) {
+        let skills = this.data.skills;
+        skills.enableAbility = value;
+        this.setData("skills", skills);
     }
     get callOutCoolDown() {
         return this.data.extra.callOutCoolDown;
@@ -309,7 +317,7 @@ export class Dragon {
         for (let l = (levelBefore || 1); l < this.level; l++)
             (_a = this.base) === null || _a === void 0 ? void 0 : _a.triggerEvent(`dws:lv${l}_${l + 1}`);
         if (this.isExist) {
-            //
+            // animation
         }
     }
     /**
@@ -318,6 +326,9 @@ export class Dragon {
     get isExist() {
         let entity = world.getEntity(this.entityId);
         return entity && entity.isValid ? true : false;
+    }
+    get canEvolve() {
+        return this.isExist && this.evolutionPermission && this.energy > 50;
     }
     /**
      * Save this dragon's data to structure.
@@ -345,20 +356,23 @@ export class Dragon {
      * @returns True if this dragon is out now else false.
      */
     switchState() {
-        var _a, _b;
         if (this.callOutCoolDown) {
             sendInfo(this.ownerId, `[${this.name}]召唤冷却中，剩余时间：${this.callOutCoolDown / 20}s`);
             return this.isExist;
         }
         if (this.isExist) {
             // call in
-            let health = (_a = this.base) === null || _a === void 0 ? void 0 : _a.getComponent("minecraft:health");
-            let currentValue = (health === null || health === void 0 ? void 0 : health.currentValue) || 0;
-            let maxValue = (health === null || health === void 0 ? void 0 : health.effectiveMax) || 0;
-            this.saveToStructure();
-            (_b = this.base) === null || _b === void 0 ? void 0 : _b.remove();
-            this.health = currentValue;
-            this.maxHealth = maxValue;
+            this.back();
+            system.runTimeout(() => {
+                var _a, _b;
+                let health = (_a = this.base) === null || _a === void 0 ? void 0 : _a.getComponent("minecraft:health");
+                let currentValue = (health === null || health === void 0 ? void 0 : health.currentValue) || 0;
+                let maxValue = (health === null || health === void 0 ? void 0 : health.effectiveMax) || 0;
+                this.saveToStructure();
+                (_b = this.base) === null || _b === void 0 ? void 0 : _b.remove();
+                this.health = currentValue;
+                this.maxHealth = maxValue;
+            }, 1);
             return false;
         }
         // call out
@@ -382,7 +396,18 @@ export class Dragon {
      * Evolve this dragon.
      */
     evolve(forceEvolve = false) {
-        //
+        var _a;
+        if (this.canEvolve || forceEvolve)
+            (_a = this.base) === null || _a === void 0 ? void 0 : _a.triggerEvent("dws:evolve");
+    }
+    back() {
+        var _a;
+        if (this.isExist && this.stage) {
+            let health = this.health;
+            (_a = this.base) === null || _a === void 0 ? void 0 : _a.triggerEvent("dws:back");
+            this.applyData();
+            this.health = health;
+        }
     }
     getInfo() {
         let stateInfo = `状态: ${this.isExist ? "已召唤" : (this.callOutCoolDown ? `召唤冷却： ${this.callOutCoolDown / 20}s` : "召回")}\n`;

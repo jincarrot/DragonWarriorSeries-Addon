@@ -1,0 +1,70 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:reguman",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/reguman",
+				"evolved": "textures/entity/reguman_v2"
+			},
+			"geometry": {
+				"default": "geometry.reguman",
+				"evolved": "geometry.reguman_v2"
+			},
+			"render_controllers": [
+				"controller.render.dragon_dws"
+			],
+			"spawn_egg": {
+				"texture": "reguman_spawn_egg"
+			},
+			"animations": {
+				"move": "controller.animation.reguman.move",
+				"attack": "animation.reguman.attack",
+				"sitting": "animation.reguman.sit",
+				"v2_sitting": "animation.levelup.sit",
+				"always": "animation.reguman.always",
+				"v2_always": "animation.levelup.always",
+				"walk": "animation.reguman.walk",
+				"v2_walk": "animation.levelup.walk",
+				"v2_run": "animation.levelup.run",
+				"gain_exp": "animation.reguman.gain_exp",
+				"lt": "animation.common.look_at_target",
+				"lp": "animation.common.look_at_player",
+				"v1_move": "controller.animation.reguman.v1.move",
+				"v1_sit": "controller.animation.reguman.v1.sit",
+				"v2_move": "controller.animation.dragon_v2.move",
+				"v2_sit": "controller.animation.dragon_v2.sit"
+			},
+			"scripts": {
+				"pre_animation": [
+					"v.is_evolved = q.property('dws:evolved');"
+				],
+				"animate": [
+					{
+						"v1_move": "!v.is_evolved"
+					},
+					{
+						"v1_sit": "!v.is_evolved"
+					},
+					{
+						"v2_move": "v.is_evolved"
+					},
+					{
+						"v2_sit": "v.is_evolved"
+					},
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"firef": "dws:firef"
+			},
+			"sound_effects": {
+				"walk": "levelup.walk"
+			}
+		}
+	}
+}

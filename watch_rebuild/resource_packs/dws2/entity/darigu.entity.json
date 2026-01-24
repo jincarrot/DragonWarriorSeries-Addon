@@ -1,0 +1,43 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:darigu",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/darigu"
+			},
+			"geometry": {
+				"default": "geometry.darigu"
+			},
+			"render_controllers": ["controller.render.default"],
+			"spawn_egg": {
+				"base_color": "#2a6fb5",
+				"overlay_color": "#0a3594"
+			},
+			"animations":{
+				"move": "controller.animation.reguman.move",
+				"attack": "animation.reguman.attack",
+				"sit":"animation.reguman.sit",
+				"always":"animation.reguman.always",
+				"walk": "animation.reguman.walk"
+			},
+			"scripts": {
+				"animate": [
+					{"move": "query.is_moving"},
+					{"attack":"v.attack_time"},
+					{"sit":"query.is_sitting"},
+					"always",
+					"lt",
+					"lp"
+				]
+			},
+			"particle_effects": {
+				"waterf": "dws:waterf"
+			}
+
+		}
+	}
+}

@@ -1,0 +1,29 @@
+{
+    "format_version": "1.12",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier":"dws:sori_spawn_egg"
+        },
+
+
+        "tags": ["crafting_table"],
+        "pattern": [
+            "###",
+            "#P#",
+            "###"
+    ],
+    "key": {
+      "#": {
+            "item": "dws:light_energy"
+        },
+      "P": {
+            "item": "dws:light_core"
+        }
+    },
+    "result": [
+        {
+        "item": "dws:sori_card"
+    }  
+   ]
+ }
+}

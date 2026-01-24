@@ -2,7 +2,6 @@ import { AbilityType, TraceModeType } from "../enums/ability";
 import { ElementType } from "../enums/attr";
 import { manager } from "../managers/manager";
 import { Ray } from "../modules/collisions";
-import { alert } from "../utils/debug";
 import { getClosestEnermy } from "../utils/game";
 //type:normal(单独伤害),range(范围伤害),pierce(穿透伤害),defend(防御),line(光线)
 export var abilities = [
@@ -167,7 +166,6 @@ function normalAbilityCallback(attr) {
                 var _a;
                 let ability = manager.ability.getFromProjectile(projectile.base);
                 target.applyDamage(attr.damage * (1 + ((ability === null || ability === void 0 ? void 0 : ability.user.level) || 1) / 10.0));
-                alert(`${ability === null || ability === void 0 ? void 0 : ability.user.level}`);
                 if (attr.effects)
                     for (let effectName in attr.effects) {
                         if (effectName == "fire") {
@@ -247,6 +245,51 @@ export const ABILITIES = {
                 }
             }
         }
+    },
+    2: {
+        name: "炫光爆裂",
+        attributes: [ElementType.Gold],
+        types: [AbilityType.Offensive],
+        cost: 30,
+        duration: 150,
+        projectileAttr: {
+            speed: 1,
+            range: 2
+        },
+        callbacks: normalAbilityCallback({
+            projectileType: "dws:gold_ball",
+            damage: 16
+        })
+    },
+    3: {
+        name: "冽海飓风",
+        attributes: [ElementType.Water],
+        types: [AbilityType.Offensive],
+        cost: 30,
+        duration: 150,
+        projectileAttr: {
+            speed: 1,
+            range: 2
+        },
+        callbacks: normalAbilityCallback({
+            projectileType: "dws:water_storm",
+            damage: 16
+        })
+    },
+    4: {
+        name: "千里追月",
+        attributes: [ElementType.Light],
+        types: [AbilityType.Offensive],
+        cost: 30,
+        duration: 150,
+        projectileAttr: {
+            speed: 1,
+            range: 2
+        },
+        callbacks: normalAbilityCallback({
+            projectileType: "dws:moon",
+            damage: 16
+        })
     }
 };
 //# sourceMappingURL=abilities.js.map

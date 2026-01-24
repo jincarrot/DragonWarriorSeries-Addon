@@ -2,6 +2,7 @@ import { world } from "@minecraft/server"
 import { manager } from "./watch3.0/managers/manager";
 import { isDragon } from "./watch3.0/utils/game";
 import "./watch3.0/utils/base"
+import { alert } from "./watch3.0/utils/debug";
 
 let aEvents = world.afterEvents;
 

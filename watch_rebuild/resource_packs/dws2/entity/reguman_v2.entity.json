@@ -1,0 +1,41 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dws:reguman_v2",
+			"materials": {
+				"default": "entity_alphablend"
+			},
+			"textures": {
+				"default": "textures/entity/reguman_v2"
+			},
+			"geometry": {
+				"default": "geometry.reguman_v2"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"animations": {
+				"move": "controller.animation.reguman_v2.move",
+				"walk": "animation.levelup.walk",
+				"always": "animation.levelup.always",
+				"born": "animation.levelup.born",
+				"attack": "animation.levelup.attack",
+				"run": "animation.levelup.run",
+				"swim": "animation.levelup.swim",
+				"sit": "animation.levelup.sit",
+				"look_at_target": "animation.common.look_at_target"
+			},
+			"scripts": {
+				"animate": [
+					"move",
+					"look_at_target",
+					{"attack": "v.attack_time"}
+				]
+			},
+			"particle_effects": {
+				"firef": "dws:firef"
+			}
+		}
+	}
+}

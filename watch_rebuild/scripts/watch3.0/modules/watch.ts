@@ -4,6 +4,7 @@ import { Warrior } from "./warrior";
 import { manager } from "../managers/manager";
 import { isAbility } from "../utils/game";
 import { ABILITIES } from "../config/abilities";
+import { Dragon } from "./dragon";
 
 
 class DWSUI {
@@ -62,6 +63,7 @@ export class Watch {
         this.form.title("斗龙手环");
         this.form.button("召唤/召回");
         this.form.button("使用技能");
+        this.form.button("斗龙进化");
         this.form.button("查看信息");
         this.form.button("设置");
     }
@@ -69,11 +71,11 @@ export class Watch {
     /**
      * Chioce form.
      */
-    private choiceForm(showAll = true) {
+    private choiceForm(showAll = true, btnName=(dragon: Dragon) => {return dragon.name}) {
         let form = new DWSUI();
         form.title("选择");
         let dragons = manager.warrior.getWarrior(this.player.id).dragons;
-        for (let dragon of dragons) if (showAll || dragon.isExist) form.button(dragon.name, `textures/ui/${dragon.typeId.replace("dws:", "")}.v1`);
+        for (let dragon of dragons) if (btnName(dragon) && showAll || dragon.isExist) form.button(btnName(dragon), `textures/ui/${dragon.typeId.replace("dws:", "")}.${dragon.stage ? "v2_1" : "v1"}`);
         return form;
     }
 
@@ -81,7 +83,7 @@ export class Watch {
         let form = new DWSUI();
         form.title("选择颜色");
         let btns = [["金", "gold"], ["木", "tree"], ["水", "water"], ["火", "fire"], ["土", "earth"], ["光", "light"]];
-        for (let btn of btns) form.button(btn[0], `textures/ui/${btn[1]}logo`);
+        for (let btn of btns) form.button(btn[0], `textures/particles/${btn[1]}f`);
         return form;
     }
 
@@ -134,7 +136,7 @@ export class Watch {
             if (arg.canceled) return;
             switch (arg.selection) {
                 case 0:
-                    this.choiceForm().show(this.player).then((arg) => {
+                    this.choiceForm(true, (dragon) => {return dragon.isExist ? "召回" : (dragon.callOutCoolDown ? `冷却${dragon.callOutCoolDown / 20}s` : "召唤")}).show(this.player).then((arg) => {
                         if (arg.canceled) return;
                         this.switchState(arg.selection as number);
                     });
@@ -150,6 +152,16 @@ export class Watch {
                     })
                     break;
                 case 2:
+                    this.choiceForm(false, (dragon) => {return dragon.canEvolve ? (dragon.stage ? "复原" : "进化") : ""}).show(this.player).then((arg) => {
+                        if (arg.canceled) return;
+                        let warrior = manager.warrior.getWarrior(this.player.id);
+                        let dragons = warrior.dragons;
+                        dragons.forEach((dragon) => {if (!dragon.canEvolve) dragons.splice(dragons.indexOf(dragon), 1)});
+                        let selected = dragons[arg.selection as number];
+                        selected.stage ? selected.back() : selected.evolve();
+                    })
+                    break;
+                case 3:
                     this.choiceForm().show(this.player).then((arg) => {
                         if (arg.canceled) return;
                         let warrior = manager.warrior.getWarrior(this.player.id);
@@ -162,7 +174,7 @@ export class Watch {
                         infoForm.show(this.player)
                     })
                     break;
-                case 3:
+                case 4:
                     this.settingForm.show(this.player).then((arg) => {
                         if (arg.canceled) return;
                         switch (arg.selection) {

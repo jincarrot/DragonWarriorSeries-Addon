@@ -1,6 +1,7 @@
 import { world } from "@minecraft/server";
 import { dragonData } from "../config/dragons";
 import { ABILITIES } from "../config/abilities";
+import { ElementType } from "../enums/attr";
 /**
  * Get the closest enermy of a specific entity.
  * @param entity
@@ -31,7 +32,23 @@ export function isDragon(typeId) {
 export function isAbility(abilityId) {
     return abilityId in ABILITIES;
 }
+export function isElement(typeId) {
+    return Object.values(ElementType).includes(typeId);
+}
 export function sendInfo(playerId, info) {
     world.getEntity(playerId).sendMessage(info);
+}
+export function tryGetElements(entity) {
+    var _a;
+    let els = [];
+    if (entity.getComponent("minecraft:type_family")) {
+        for (let familyType of (_a = entity.getComponent("minecraft:type_family")) === null || _a === void 0 ? void 0 : _a.getTypeFamilies()) {
+            if (isElement(familyType))
+                els.push(familyType);
+        }
+    }
+    if (!els)
+        els = JSON.parse(entity.getDynamicProperty("elements") || "[]");
+    return els;
 }
 //# sourceMappingURL=game.js.map
